@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/scripts/script.js" defer></script>
+    <title>Space Invaders menu</title>
+</head>
+<body>
+    <main id="main">
+        <nav>
+            <div class="current-high-score visible" data-current-high-score>
+                <span>H</span>
+                <span>I</span>
+                <span>G</span>
+                <span>H</span>
+                <span>E</span>
+                <span>S</span>
+                <span class="word-end">T</span>
+                <span>S</span>
+                <span>C</span>
+                <span>O</span>
+                <span>R</span>
+                <span>E</span>
+                <span class="word-end">:</span>
+                <span></span>
+            </div>
+            <button class="button button--purple nav-button" data-reset-button>Reset high score</button>
+            <button class="sound-toggler active" id="nav-icon" data-sound-toggler>
+                <i class="fa-solid fa-volume-high" data-icon></i>
+            </button>
+        </nav>
+        <header>
+            <h1 class="game-title">
+                <span>S</span>
+                <span>p</span>
+                <span>a</span>
+                <span>c</span>
+                <span class="word-end-title">e</span>
+                <span>I</span>
+                <span>n</span>
+                <span>v</span>
+                <span>a</span>
+                <span>d</span>
+                <span>e</span>
+                <span>r</span>
+                <span>s</span>
+            </h1>
+        </header>
+        <div class="btn-container">
+            <a href="game.html" class="button button--yellow" data-play-btn>New game</a>
+            <button class="button button--purple" data-instructions-button>Instructions</button>
+        </div>
+        <section class="instructions-modal" data-start-game-modal>
+            <h2>Instructions</h2>
+            <h3>Controls</h3>
+            <p>To Navigate: Use the arrow keys or numpad (left and right) or the "A" and "D" keys on the keyboard.</p>
+            <p>To Shoot: Press the spacebar on the keyboard.</p>
+            <h3>Enemies</h3>
+            <ul>
+                <li>
+                    <figure class="instructions-list">
+                        <img src="assets/images/alien1.png" alt="White alien">
+                        <figcaption>The white aliens fire small projectiles and are not very scary.</figcaption>
+                    </figure>
+                </li>
+                <li>
+                    <figure class="instructions-list">
+                        <img src="assets/images/alien2.png" alt="Green alien">
+                        <figcaption>The green aliens are also cute like the white ones - Same properties.
+                        </figcaption>
+                    </figure>
+                </li>
+                <li>
+                    <figure class="instructions-list">
+                        <img src="assets/images/alien3.png" alt="Yellow alien">
+                        <figcaption>The yellow aliens are slightly more threatening than the white/green aliens and fire faster
+                            projectiles.
+                        </figcaption>
+                    </figure>
+                </li>
+                <li>
+                    <figure class="instructions-list">
+                        <img src="assets/images/alien4.png" alt="Orange alien">
+                        <figcaption>The orange aliens are quite mean and fire faster and larger projectiles than the yellow
+                            aliens.
+                        </figcaption>
+                    </figure>
+                </li>
+                <li>
+                    <figure class="instructions-list">
+                        <img src="assets/images/alien5.png" alt="Red alien">
+                        <figcaption>The red aliens are the most dangerous, beware. You are warned.</figcaption>
+                    </figure>
+                </li>
+            </ul>
+            <h3>Difficulty increase</h3>
+            <p>Every 100,000 points clear a stage, and the game's difficulty slightly increases. Currently, there are 10 stages, but
+            more may unlock in the future as adventurers progress further - although, as of yet, no adventurer has survived long
+            enough to see beyond stage 10. But who knows, maybe someone will break that record!</p>
+            <button class="button button--yellow" data-close-btn>Close</button>
+        </section>
+        <!-- Overlay -->
+        <div class="overlay" data-overlay></div>
+    </main>
+    <footer>
+        <p>
+            &copy; Space Invaders game 2023 created by Sasan Tazayoni
+        </p>
+        <a href="https://github.com/SasanTazayoni" target="_blank" rel="noopener" class="github-link"
+            aria-label="Github profile link">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+    <!-- font awesome script -->
+    <script src="https://kit.fontawesome.com/cc28b3bda6.js" crossorigin="anonymous"></script>
+</body>
+</html>

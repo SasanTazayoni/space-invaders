@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/scripts/game.js" defer></script>
+    <title>Space Invaders game</title>
+</head>
+<body>
+    <main>
+        <div id="canvas__container">
+            <button class="sound-toggler active" data-sound-toggler>
+                <i class="fa-solid fa-volume-high" data-icon></i>
+            </button>
+            <p id="score">
+                <span>Score:</span> <span data-score>0</span>
+            </p>
+            <canvas class="canvas" data-canvas></canvas>
+        </div>
+        <!-- Stage clear modal -->
+        <div class="stage-clear-modal" data-stage-clear-modal>
+            <h1 class="stage-clear-message" data-message></h1>
+        </div>
+        <!-- End game modal -->
+        <section class="end-game-modal" data-end-game-modal>
+            <div class="animated-text-container" data-animation>
+                <span>N</span>
+                <span>E</span>
+                <span class="word-end">W</span>
+                <span>H</span>
+                <span>I</span>
+                <span>G</span>
+                <span class="word-end">H</span>
+                <span>S</span>
+                <span>C</span>
+                <span>O</span>
+                <span>R</span>
+                <span>E</span>
+            </div>
+            <h1>Game over</h1>
+            <p data-end-score></p>
+            <div class="btn-container">
+                <button class="button button--yellow" data-play-btn>Play again</button>
+                <a href="index.html" class="button button--purple" data-menu-btn>Main menu</a>
+            </div>
+        </section>
+        <!-- Overlay -->
+        <div class="overlay" data-overlay></div>
+    </main>
+    <footer>
+        <p>
+            &copy; Space Invaders game 2023 created by Sasan Tazayoni
+        </p>
+        <a href="https://github.com/SasanTazayoni" target="_blank" rel="noopener" class="github-link"
+            aria-label="Github profile link">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </footer>
+    <!-- font awesome script -->
+    <script src="https://kit.fontawesome.com/cc28b3bda6.js" crossorigin="anonymous"></script>
+</body>
+</html>
