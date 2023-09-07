@@ -9,7 +9,7 @@ let attackSpeed = -10;
 let projectileInterval = null;
 let firstProjectile = true;
 let frames = 0;
-let randomInterval = Math.floor((Math.random() * 500) + 600);
+let randomInterval = Math.floor((Math.random() * 600) + 600);
 let whiteFrequency = 0.3;
 let greenFrequency = 0.55;
 let yellowFrequency = 0.75;
@@ -679,7 +679,7 @@ function animate() {
     grids.forEach(grid => {
         grid.update();
         // spawn projectiles
-        const minShootingInterval = 90;
+        const minShootingInterval = 100;
         const maxShootingInterval = 140;
         // Generate a random shooting interval within the specified range
         const randomShootingInterval = Math.floor(Math.random() * (maxShootingInterval - minShootingInterval + 1)) + minShootingInterval;
@@ -769,7 +769,7 @@ function animate() {
     if (frames % randomInterval === 0) {
         grids.push(new Grid());
         frames = 0;
-        Math.floor((Math.random() * 500) + 600);
+        Math.floor((Math.random() * 600) + 600);
     }
 
     frames++;
