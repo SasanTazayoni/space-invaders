@@ -9,7 +9,7 @@ let attackSpeed = -10;
 let projectileInterval = null;
 let firstProjectile = true;
 let frames = 0;
-let randomInterval = Math.floor((Math.random() * 500) + 500);
+let randomInterval = Math.floor((Math.random() * 500) + 600);
 let whiteFrequency = 0.3;
 let greenFrequency = 0.55;
 let yellowFrequency = 0.75;
@@ -769,7 +769,7 @@ function animate() {
     if (frames % randomInterval === 0) {
         grids.push(new Grid());
         frames = 0;
-        Math.floor((Math.random() * 500) + 500);
+        Math.floor((Math.random() * 500) + 600);
     }
 
     frames++;
