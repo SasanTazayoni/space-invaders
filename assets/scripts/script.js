@@ -1,3 +1,5 @@
+import { clearCanvas, resetGame, animate, playBtn } from './game.js';
+
 const storedHighScore = parseInt(localStorage.getItem('High score')) || 0;
 const currentHighScore = document.querySelector('[data-current-high-score]');
 const soundToggler = document.querySelector('[data-sound-toggler]');
@@ -64,6 +66,12 @@ resetBtn.addEventListener('click', () => {
     currentHighScore.classList.remove('visible');
 
     playResetSound();
+});
+
+playBtn.addEventListener('click', () => {
+    clearCanvas();
+    resetGame();
+    animate();
 });
 
 instructionsBtn.addEventListener('click', () => {

@@ -34,7 +34,7 @@ const stageClearMessage = document.querySelector('[data-message]');
 const endGameModal = document.querySelector('[data-end-game-modal]');
 const animation = document.querySelector('[data-animation]');
 const modalScore = document.querySelector('[data-end-score]');
-const playBtn = document.querySelector('[data-play-btn]');
+export const playBtn = document.querySelector('[data-play-btn]');
 const overlay = document.querySelector('[data-overlay]');
 
 soundToggler.addEventListener('click', () => {
@@ -66,11 +66,11 @@ playBtn.addEventListener('click', () => {
     animate();
 });
 
-function clearCanvas() {
+export function clearCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function resetGame() {
+export function resetGame() {
     thresholdsTriggered = Array(scoreThresholds.length).fill(false);
 
     game.over = false;
@@ -591,7 +591,7 @@ for (let i = 0; i < 100; i++) {
     }));
 }
 
-function animate() {
+export function animate() {
     if (!game.active) return;
     requestAnimationFrame(animate);
     context.fillStyle = '#14011f';
