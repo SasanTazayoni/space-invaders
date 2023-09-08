@@ -9,7 +9,8 @@ let attackSpeed = -10;
 let projectileInterval = null;
 let firstProjectile = true;
 let frames = 0;
-let randomInterval = Math.floor((Math.random() * 600) + 600);
+let spawnRate = 600;
+let randomInterval = Math.floor((Math.random() * spawnRate) + spawnRate);
 let whiteFrequency = 0.3;
 let greenFrequency = 0.55;
 let yellowFrequency = 0.75;
@@ -56,6 +57,7 @@ function updateSoundButton() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    resetGame();
     updateSoundButton();
 });
 
@@ -77,6 +79,7 @@ function resetGame() {
     game.active = true;
     score = 0;
     gameScore.innerHTML = score;
+    spawnRate = 600;
     whiteFrequency = 0.3;
     greenFrequency = 0.55;
     yellowFrequency = 0.75;
@@ -679,8 +682,8 @@ function animate() {
     grids.forEach(grid => {
         grid.update();
         // spawn projectiles
-        const minShootingInterval = 100;
-        const maxShootingInterval = 140;
+        const minShootingInterval = 20;
+        const maxShootingInterval = 180;
         // Generate a random shooting interval within the specified range
         const randomShootingInterval = Math.floor(Math.random() * (maxShootingInterval - minShootingInterval + 1)) + minShootingInterval;
         // Check if the current frame matches the random interval
@@ -769,7 +772,7 @@ function animate() {
     if (frames % randomInterval === 0) {
         grids.push(new Grid());
         frames = 0;
-        Math.floor((Math.random() * 600) + 600);
+        Math.floor((Math.random() * spawnRate) + spawnRate);
     }
 
     frames++;
@@ -783,6 +786,7 @@ function gameDifficultyIncrease(score) {
             for (let j = 0; j < invaderFrequencies.length; j++) {
                 const newFrequency = invaderFrequencies[j] -= percentageDecreases[j];
                 invaderFrequencies[j] = parseFloat(newFrequency.toFixed(3));
+                spawnRate -= 30;
             }
 
             thresholdsTriggered[i] = true;
