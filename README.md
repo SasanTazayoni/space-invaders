@@ -192,13 +192,13 @@ I used the following websites to check my code for syntax errors:
 
 A great way to test is to get users to try the application and give feedback. Adjustments have been made according to the feedback given and the adjustments that were not made are documented in the future features section.
 
-| Name | Age | Tech BG |
+| Name | Comment |
 | --- | --- | --- |
-| Joe | Comment:  The gameplay viewed and responded seamlessly - I dont have a single point to note apart from it would be a great addition to make it mobile responsive. |
-| Edna | Comment: My 1st impression of the home page was great. I loved the colors you picked. Then while playing, I felt a 100% flashback to the genuine 80's arcade games, I think you did a pretty good job! If I had to suggest something, it would be to include some background music. |
-| Saba | Comment: It's fun but it's a little too easy, I can just destroy most of the aliens before they fire at me |
-| Mark | Comment: Amazing game Sasan brought me back to my childhood, very nicely laid out, only one suggestion to slow down the lasers that the aliens fire down at you, the bullets are fine but the lasers travel way too fast to react to even from the start, maybe they can be that fast when the game levels. |
-| Stefania | Comment:  I liked it a lot, the sounds are cool and like the colours :smile: It gave me 80s vibes. Good job! |
+| Joe | The gameplay viewed and responded seamlessly - I dont have a single point to note apart from it would be a great addition to make it mobile responsive. |
+| Edna | My 1st impression of the home page was great. I loved the colors you picked. Then while playing, I felt a 100% flashback to the genuine 80's arcade games, I think you did a pretty good job! If I had to suggest something, it would be to include some background music. |
+| Saba | It's fun but it's a little too easy, I can just destroy most of the aliens before they fire at me |
+| Mark | Amazing game Sasan brought me back to my childhood, very nicely laid out, only one suggestion to slow down the lasers that the aliens fire down at you, the bullets are fine but the lasers travel way too fast to react to even from the start, maybe they can be that fast when the game levels. |
+| Stefania | I liked it a lot, the sounds are cool and like the colours :smile: It gave me 80s vibes. Good job! |
 
 ### Lighthouse testing
 
