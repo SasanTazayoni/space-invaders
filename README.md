@@ -23,7 +23,6 @@ You can play the game [here](https://sasantazayoni.github.io/space-invaders/).
 * As a user, I want to be able to toggle the sound on and off.
 * As a user, I want to test my reflexes and shooting skills against waves of alien invaders, striving to master the game's mechanics.
 * As a user, I seek progressively increasing difficulty levels as I advance in the game to provide a more challenging experience.
-* As a user, I want a fun and easy-to-pick-up game that I can enjoy during short breaks.
 * As a user, I want to experience nostalgia by reliving my childhood through the game.
 
 ### Design
@@ -84,6 +83,10 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ![Game screen](documentation/gameplay.jpg) <br>
 
+* For every 100,000 points scored by the player, the difficulty increases which is signalled by the UI: <br>
+
+![Difficulty increase trigger](documentation/stageclear.png) <br>
+
 * When the ship is destroyed by an alien projectile, the game ends and a modal opens showing your current score. Within this menu is an option to play again via the "Play again" button or an option to return to the main menu via the "Main menu" button: <br>
 
 ![End game modal](documentation/endgamemodal.png) <br>
@@ -101,6 +104,7 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 * Mini bosses can be added into the game after each stage.
 * More ranks of aliens can be added (i.e more powerful than the red aliens with more pressurising projectiles).
 * A game difficulty can be implemented for those who are more casual gamers as well as for the skilled gamers.
+* It could possible be made responsive (I am unsure of how to establish this).
 
 ## Technologies used
 
@@ -130,3 +134,89 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 * [Opensea.io](https://opensea.io/) used to obtain alien sprites.
 * [Paint 3D](https://apps.microsoft.com/store/detail/paint-3d/9NBLGGH5FV99) used to establish a blank background for all sprites.
 * [Youtube](https://www.youtube.com/watch?v=MCVU0w73uKI&t) used as a tutorial to understand concepts of collision and for the basis of building out this project.
+
+## Testing
+
+### Validator testing
+
+I used the following websites to check my code for syntax errors:
+
+* [HTML validator](https://validator.w3.org/)
+* [CSS validator](https://jigsaw.w3.org/css-validator/)
+* [JavaScript validator](https://jshint.com/)
+
+### Testing User Stories from (UX) section
+
+* As a user, I want to dive right into a new game without the need for navigating menus or adjusting settings.
+  * The "New game" button on the main menu starts a new game and the "Play again" button on the end game modal can be clicked to start the game: <br>
+
+![New game button](documentation/newgame.png) ![Play again button](documentation/playagain.png) <br>
+
+* As a user, I aim to grasp the game's mechanics and controls seamlessly, without becoming overwhelmed by menu navigation.
+  * There is a set of instructions which appears in the modal on the main menu which gives all the information about how the game works with key words highlighted for quick reference: <br>
+
+![Instructions modal](documentation/instructionsmodal.png) <br>
+
+* As a user, I want to view my highest score to set a target for future gameplay.
+  * The high score appears on the top left of the main menu page with an eye-catching animation effect so that it is easy to spot: <br>
+
+![High score with animation](documentation/highscore.png) <br>
+
+* As a user, I want to be able to reset my high score.
+  * The "Reset high score" button on the top right of the main menu page can be clicked to reset the high score: <br>
+
+![Reset button](documentation/resetbtn.png) <br>
+
+* As a user, I want to be able to toggle the sound on and off.
+  * The sound can be toggled on and off by clicking the sound icon on the main menu page and as well as the game screen: <br>
+
+![Sound toggler (on)](documentation/soundon.png) ![Sound toggler (off)](documentation/soundoff.png) <br>
+
+* As a user, I want to test my reflexes and shooting skills against waves of alien invaders, striving to master the game's mechanics.
+  * When starting a game, the game consists of aliens which spawn and fire at the player sporadically. The user can exercise their reaction and information-processing skills: <br>
+
+![Game play](documentation/gameplay.jpg) <br>
+ 
+* As a user, I seek progressively increasing difficulty levels as I advance in the game to provide a more challenging experience.
+  * When a stage is cleared, the progressively becomes more difficult with a higher chance of tougher enemies and an increased spawn rate: <br>
+ 
+![Difficulty increase trigger](documentation/stageclear.png) <br>
+
+* As a user, I want to experience nostalgia by reliving my childhood through the game.
+  * The game menu gives a retro-feel as well as the game itself: <br>
+
+![Main menu](documentation/introSS.jpg) <br>
+![Game screen](documentation/gameplay.jpg) <br>
+
+### Third-Party Testing
+
+A great way to test is to get users to try the application and give feedback. Adjustments have been made according to the feedback given and the adjustments that were not made are documented in the future features section.
+
+| Name | Age | Tech BG |
+| --- | --- | --- |
+| Joe | Comment:  The gameplay viewed and responded seamlessly - I dont have a single point to note apart from it would be a great addition to make it mobile responsive. |
+| Edna | Comment: My 1st impression of the home page was great. I loved the colors you picked. Then while playing, I felt a 100% flashback to the genuine 80's arcade games, I think you did a pretty good job! If I had to suggest something, it would be to include some background music. |
+| Saba | Comment: It's fun but it's a little too easy, I can just destroy most of the aliens before they fire at me |
+| Mark | Comment: Amazing game Sasan brought me back to my childhood, very nicely laid out, only one suggestion to slow down the lasers that the aliens fire down at you, the bullets are fine but the lasers travel way too fast to react to even from the start, maybe they can be that fast when the game levels. |
+| Stefania | Comment:  I liked it a lot, the sounds are cool and like the colours :smile: It gave me 80s vibes. Good job! |
+
+### Lighthouse testing
+
+Lighthouse was a helpful tool for checking where where the web application was experiencing the most issues.
+
+![Lighthouse test for the game](documentation/lighthouse.png) <br>
+
+This application has received outstanding scores in key performance metrics, with an impressive 99 in performance and a perfect 100 in accessibility and SEO according to Google Lighthouse testing. These exceptional ratings reflect its commitment to providing a fast and accessible user experience while excelling in search engine optimization. Additionally, the high score of 92 in best practices showcases its dedication to adhering to industry standards and guidelines, further cementing its position as a top-notch and user-friendly application.
+
+### PowerMapper Compatibility
+
+![Compatibility of various browsers for Space invaders](documentation/powermapper.png) <br>
+
+As the results show, the application is highly compatible across all browsers.
+
+### Bugs
+
+* If the screen is resized during the game, it may delay the animate function which is constantly firing. This results in unusual behaviour such as aliens spawning in irregular patterns.
+* If the console is open while the game is running, the game might flicker or slow down.
+* Sometimes an alien projectile disappears before it reaches the bottom of the screen. This is to do with how projectiles are cleared from the array that they are passed into.
+* The game behaves improperly on small screens due to the canvas not scaling.
