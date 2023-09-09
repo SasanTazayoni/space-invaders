@@ -37,3 +37,68 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 #### Typography
 
 'Exo 2' is the font of choice in this application with a fallback of the font-stack 'Arial, Helvetica, sans-serif'. This was a deliberate decision to align with the game's dynamic and modern aesthetic. With its geometric letterforms and clean lines, Exo 2 effectively captures the energy and excitement that our game offers. Its legibility and versatility ensure that players can navigate effortlessly while being immersed in the vibrant experience we've crafted.
+
+### Features
+
+#### Current features
+
+* On the main menu, the highest score is retrieved from the local storage and shown with a bouncing animation to catch the user's attention. If there is no high score, nothing displays: <br>
+
+![High score animation](documentation/highscore.png) <br>
+
+* On the main menu and in the game screen, there is a sound toggler which can be used to activate/disable the sound. These are kept in sync by accessing the session storage: <br>
+
+![Sound toggler with sound on](documentation/soundon.png) ![Sound toggler with sound off](documentation/soundoff.png) <br>
+
+* All buttons are either purple or yellow: <br>
+
+![Buttons](documentation/buttons.png) <br>
+
+* Buttons also hover a neon hover effect according to their colour: <br>
+
+![Yellow button hover effect](documentation/hoveryellow.png) ![Purple button hover effect](documentation/hoverpurple.png) <br>
+
+* The 'Reset high score' button interacts with the local storage to erase the high score, simultaneously removing it from the top left corner of the main menu. When clicked, this button triggers a destruction sound effect, creating the illusion of the high score being obliterated, accompanied by a subtle tilt effect on the button for added visual feedback.: <br>
+
+![Reset button click effect](documentation/resetbtn.png) <br>
+
+* The "New game" button starts a new game when clicked: <br>
+
+![New game button](documentation/newgame.png) <br>
+
+* The "Instructions" button opens an instructions modal when clicked: <br>
+
+![Instructions button](documentation/instructions.png) <br>
+![Instructions modal](documentation/instructionsmodal.png) <br>
+
+* There is an animated effect on the game title in the main menu for an additional aesthetic effect: <br>
+
+![Game title](documentation/title.png) <br>
+
+* At the bottom of the page is a link to this github along the credits, with a themed hover effect on the github icon: <br>
+
+![Credits and github link](documentation/githublink.png) <br>
+![Hover effect on github link](documentation/themedhovereffect.png) <br>
+
+* The main game screen opens when the "New game" button is clicked and looks like this: <br>
+
+![Game screen](documentation/gameplay.png) <br>
+
+* When the ship is destroyed by an alien projectile, the game ends and a modal opens showing your current score. Within this menu is an option to play again via the "Play again" button or an option to return to the main menu via the "Main menu" button: <br>
+
+![End game modal](documentation/endgamemodal.png) <br>
+
+* When the game ends the local storage is checked against the current score. If the current score is higher animated text appears saying "NEW HIGH SCORE": <br>
+
+![New high score achieved](documentation/newhighscore.png) <br>
+
+#### Future features
+
+* Background music could be added, as suggested by one of the testers.
+* Currently the difficulty of the game increases as the aliens get more fire power and spawn more frequently, the alien spawn patterns can be more variant to increase the difficulty in a more interesting way (for example, aliens could spawn from the right and left of the canvas).
+* Extra lives can be added to the spaceship and a way to attain more lives.
+* Alternate weapons, shields and power ups can be added into game for the spaceship.
+* Mini bosses can be added into the game after each stage.
+* More ranks of aliens can be added (i.e more powerful than the red aliens with more pressurising projectiles).
+* A game difficulty can be implemented for those who are more casual gamers as well as for the skilled gamers.
+
