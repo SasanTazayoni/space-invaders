@@ -220,3 +220,20 @@ As the results show, the application is highly compatible across all browsers.
 * If the console is open while the game is running, the game might flicker or slow down.
 * Sometimes an alien projectile disappears before it reaches the bottom of the screen. This is to do with how projectiles are cleared from the array that they are passed into.
 * The game behaves improperly on small screens due to the canvas not scaling.
+
+## Deployment
+
+1. Log into [GitHub](https://github.com/).
+2. Locate the [repository](https://github.com/SasanTazayoni/space-invaders).
+3. Locate the settings option along the options bar at the top of the page.
+4. Locate the 'Pages' option on the left side bar and click on it.
+5. Under the 'Branch' subheading there should be a drop-down menu - select 'Master' from the branch options.
+6. Click the save button.
+7. Github pages will build your website with the code supplied and begin hosting it when it is completed - the process usually takes a few minutes.
+8. The website URL will now be visible on the green bar under the section header. This will remain there permanently and you can refer back to it at any time.
+
+## Credits
+
+* Thanks to Edna, Stefania, Joe, Mark and Saba for thoroughly testing out my web application and giving useful suggestions.
+* Thanks to [Chris Courses](https://www.youtube.com/@ChrisCourses) from YouTube for a tutorial on how to build this project.
+* Thanks to Muhammed Irshad from [Online Tutorials](https://www.youtube.com/@OnlineTutorialsYT) from YouTube for all special effects and animations.
