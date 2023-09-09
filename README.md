@@ -38,9 +38,9 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 'Exo 2' is the font of choice in this application with a fallback of the font-stack 'Arial, Helvetica, sans-serif'. This was a deliberate decision to align with the game's dynamic and modern aesthetic. With its geometric letterforms and clean lines, Exo 2 effectively captures the energy and excitement that our game offers. Its legibility and versatility ensure that players can navigate effortlessly while being immersed in the vibrant experience we've crafted.
 
-### Features
+## Features
 
-#### Current features
+### Current features
 
 * On the main menu, the highest score is retrieved from the local storage and shown with a bouncing animation to catch the user's attention. If there is no high score, nothing displays: <br>
 
@@ -92,7 +92,7 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ![New high score achieved](documentation/newhighscore.png) <br>
 
-#### Future features
+### Future features
 
 * Background music could be added, as suggested by one of the testers.
 * Currently the difficulty of the game increases as the aliens get more fire power and spawn more frequently, the alien spawn patterns can be more variant to increase the difficulty in a more interesting way (for example, aliens could spawn from the right and left of the canvas).
@@ -102,3 +102,31 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 * More ranks of aliens can be added (i.e more powerful than the red aliens with more pressurising projectiles).
 * A game difficulty can be implemented for those who are more casual gamers as well as for the skilled gamers.
 
+## Technologies used
+
+### Languages used
+
+* HTML5
+* CSS3
+* JavaScript
+
+### Frameworks, libraries and programs used
+
+* [Font Awesome](https://fontawesome.com/) used for github icon and sound toggler.
+* [Coolors](https://coolors.co/) used to display colour palette used on the website.
+* [Google Fonts](https://fonts.google.com/) used to import 'Exo 2' font.
+* [Github](https://github.com/) used to host repository.
+* [Github pages](https://pages.github.com/) used to deploy the application.
+* [VSCode](https://code.visualstudio.com/) used to develop project.
+* [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) used for performance review.
+* [Caniuse](https://caniuse.com/) used to check compatibility of code syntax with other browsers.
+* [PowerMapper](https://www.powermapper.com/) used to check compatibility of website with other browsers.
+* [ChatGPT](https://chat.openai.com/) used to verify code and for problem-solving.
+* [StackOverflow](https://stackoverflow.com/) used to problem solve and deal with queries.
+* [Epidemicsound](https://www.epidemicsound.com/) used to obtain sound effects for the application.
+* [Favicon.io](https://favicon.io/) used to generate favicon.
+* [Unsplash](https://unsplash.com/) used to obtain background picture for the main menu.
+* [Hiclipart.com](https://www.hiclipart.com/) used to obtain sprite for player spaceship.
+* [Opensea.io](https://opensea.io/) used to obtain alien sprites.
+* [Paint 3D](https://apps.microsoft.com/store/detail/paint-3d/9NBLGGH5FV99) used to establish a blank background for all sprites.
+* [Youtube](https://www.youtube.com/watch?v=MCVU0w73uKI&t) used as a tutorial to understand concepts of collision and for the basis of building out this project.
