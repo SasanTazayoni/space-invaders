@@ -82,7 +82,7 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 * The main game screen opens when the "New game" button is clicked and looks like this: <br>
 
-![Game screen](documentation/gameplay.png) <br>
+![Game screen](documentation/gameplay.jpg) <br>
 
 * When the ship is destroyed by an alien projectile, the game ends and a modal opens showing your current score. Within this menu is an option to play again via the "Play again" button or an option to return to the main menu via the "Main menu" button: <br>
 
