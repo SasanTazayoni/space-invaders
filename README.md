@@ -199,6 +199,9 @@ A great way to test is to get users to try the application and give feedback. Ad
 | Saba | It's fun but it's a little too easy, I can just destroy most of the aliens before they fire at me |
 | Mark | Amazing game Sasan brought me back to my childhood, very nicely laid out, only one suggestion to slow down the lasers that the aliens fire down at you, the bullets are fine but the lasers travel way too fast to react to even from the start, maybe they can be that fast when the game levels. |
 | Stefania | I liked it a lot, the sounds are cool and like the colours :smile: It gave me 80s vibes. Good job! |
+| Nils | Good stuff - I get a little bit of flickering when I load the page once in the game it's running smooth, very cool! |
+| Adam | Great stuff Sasan, only thing I noticed is when you press spacebar to shoot it scrolls the page down to the end. Other than that it's very very good! |
+| Karolina | This is really cool Sasan! Very well done! One thing I noticed is when I hover over the buttons I see semi-transparent white stripes and I experience flickering across the screen. Seems to have something to do with the effect you have on the Space Invaders text? |
 
 ### Lighthouse testing
 
@@ -217,9 +220,8 @@ As the results show, the application is highly compatible across all browsers.
 ### Bugs
 
 * If the screen is resized during the game, it may delay the animate function which is constantly firing. This results in unusual behaviour such as aliens spawning in irregular patterns.
-* If the console is open while the game is running, the game might flicker or slow down.
+* If the console is open while the game is running, the game might stutter or slow down.
 * Sometimes an alien projectile disappears before it reaches the bottom of the screen. This is to do with how projectiles are cleared from the array that they are passed into.
-* The game behaves improperly on small screens due to the canvas not scaling.
 
 ## Deployment
 
