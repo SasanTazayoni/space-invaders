@@ -165,13 +165,8 @@ body {
     animation: light 2.4s linear infinite;
     text-shadow: 0 0 10px var(--color-secondary),
             0 0 20px var(--color-secondary),
-            0 0 40px var(--color-secondary),
-            0 0 80px var(--color-secondary),
-            0 0 120px var(--color-secondary),
-            0 0 200px var(--color-secondary),
-            0 0 300px var(--color-secondary),
-            0 0 400px var(--color-secondary);
-            opacity: 0.5;
+            0 0 40px var(--color-secondary);
+    opacity: 0.5;
 }
 
 .game-title span:nth-child(1) {
