@@ -75,3 +75,9 @@ closeBtn.addEventListener('click', () => {
     startGameModal.classList.remove('open');
     overlay.classList.remove('open');
 });
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+    }
+});

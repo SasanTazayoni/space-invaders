@@ -814,7 +814,12 @@ function closeModal() {
 }
 
 window.addEventListener('keydown', (e) => {
-    if (game.over) return;
+    if (game.over) {
+        if (e.key === ' ') {
+            e.preventDefault();
+        }
+        return;
+    }
 
     switch (e.key) {
         case 'a':
@@ -830,6 +835,7 @@ window.addEventListener('keydown', (e) => {
             keys.ArrowRight.pressed = true;
             break;
         case ' ':
+            e.preventDefault();
             if (projectileInterval === null) {  
                 projectiles.push(new Projectile({
                     position: {
