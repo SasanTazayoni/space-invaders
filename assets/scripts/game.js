@@ -683,7 +683,7 @@ function animate() {
         grid.update();
         // spawn projectiles
         const minShootingInterval = 20;
-        const maxShootingInterval = 200;
+        const maxShootingInterval = 300;
         // Generate a random shooting interval within the specified range
         const randomShootingInterval = Math.floor(Math.random() * (maxShootingInterval - minShootingInterval + 1)) + minShootingInterval;
         // Check if the current frame matches the random interval
