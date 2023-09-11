@@ -236,6 +236,6 @@ As the results show, the application is highly compatible across all browsers.
 
 ## Credits
 
-* Thanks to Edna, Stefania, Joe, Mark and Saba for thoroughly testing out my web application and giving useful suggestions.
+* Thanks to Edna, Stefania, Joe, Mark, Saba, Nils, Adam and Karolina for thoroughly testing out my web application and giving useful suggestions.
 * Thanks to [Chris Courses](https://www.youtube.com/@ChrisCourses) from YouTube for a tutorial on how to build this project.
 * Thanks to Muhammed Irshad from [Online Tutorials](https://www.youtube.com/@OnlineTutorialsYT) from YouTube for all special effects and animations.
