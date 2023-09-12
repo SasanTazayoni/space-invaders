@@ -8,6 +8,8 @@ const startGameModal = document.querySelector('[data-start-game-modal]');
 const overlay = document.querySelector('[data-overlay]');
 const closeBtn = document.querySelector('[data-close-btn]');
 
+// High score text
+
 function addLetterSpacingToText(text) {
   return text.split('').map(letter => `<span class="letter">${letter}</span>`).join('&nbsp;');
 }
@@ -22,6 +24,8 @@ if (storedHighScore > 0) {
 } else {
     currentHighScore.classList.remove('visible');
 }
+
+// Sound
 
 soundToggler.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
@@ -43,6 +47,8 @@ function updateSoundButton() {
 document.addEventListener('DOMContentLoaded', () => {
     updateSoundButton();
 });
+
+// Reset button
 
 function playResetSound() {
     if (soundEnabled) {
@@ -66,6 +72,8 @@ resetBtn.addEventListener('click', () => {
     playResetSound();
 });
 
+// Modal open and close
+
 instructionsBtn.addEventListener('click', () => {
     startGameModal.classList.add('open');
     overlay.classList.add('open');
@@ -75,6 +83,8 @@ closeBtn.addEventListener('click', () => {
     startGameModal.classList.remove('open');
     overlay.classList.remove('open');
 });
+
+// Prevent scrolling with spacebar
 
 document.addEventListener('keydown', (e) => {
     if (e.key === ' ' || e.key === 'Spacebar') {

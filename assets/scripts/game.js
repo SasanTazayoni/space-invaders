@@ -38,6 +38,8 @@ const modalScore = document.querySelector('[data-end-score]');
 const playBtn = document.querySelector('[data-play-btn]');
 const overlay = document.querySelector('[data-overlay]');
 
+// Sound
+
 soundToggler.addEventListener('click', () => {
     soundEnabled = !soundEnabled;
     updateSoundButton();
@@ -55,6 +57,8 @@ function updateSoundButton() {
     }
     console.log(soundEnabled);
 }
+
+// Reset game
 
 document.addEventListener('DOMContentLoaded', () => {
     resetGame();
@@ -115,10 +119,12 @@ function resetGame() {
     animation.classList.remove('visible');
 }
 
+// Canvas properties
+
 canvas.width = 1024;
 canvas.height = 576;
 
-// Player
+// Player generator
 
 class Player {
     constructor() {
@@ -166,7 +172,7 @@ class Player {
     }
 }
 
-// Player projectiles
+// Projectiles
 
 class Projectile {
     constructor({ position, velocity, soundEnabled }) {
@@ -300,6 +306,8 @@ class RedProjectile extends Projectile {
     }
 }
 
+// Explosion animations
+
 class AnimatedParticle {
     constructor({ position, velocity, radius, color, fades, soundEnabled }) {
         this.position = position;
@@ -382,6 +390,8 @@ class Explosion extends AnimatedParticle {
         return 0.8;
     }
 }
+
+// Alien generator
 
 class Invader {
     constructor({position}) {
@@ -500,6 +510,8 @@ class Invader {
     }
 }
 
+// Alien group spawn
+
 class Grid {
     constructor() {
         this.position = {
@@ -579,6 +591,8 @@ let game = {
 
 let score = 0;
 
+// Background animation
+
 for (let i = 0; i < 100; i++) {
     particles.push(new Particle({
         position: {
@@ -593,6 +607,8 @@ for (let i = 0; i < 100; i++) {
         color: 'white',
     }));
 }
+
+// Game loop
 
 function animate() {
     if (!game.active) return;
@@ -706,7 +722,7 @@ function animate() {
                         const projectileFound = projectiles.find(
                             (projectile2) => projectile2 === projectile);
 
-                        // remove invader and projectile
+                        // remove invader and projectile and update score
                         if (invaderFound && projectileFound) {
                             if (invader.type === 'invaderType1' || invader.type === 'invaderType2') {
                                 score += 200;
@@ -780,6 +796,8 @@ function animate() {
 
 animate();
 
+// Increase difficulty function
+
 function gameDifficultyIncrease(score) {
     for (let i = 0; i < scoreThresholds.length; i++) {
         if (score >= scoreThresholds[i] && !thresholdsTriggered[i]) {
@@ -801,6 +819,8 @@ function gameDifficultyIncrease(score) {
     }
 }
 
+// Open/close modal
+
 function openModal() {
     endGameModal.classList.add('open');
     overlay.classList.add('open');
@@ -812,6 +832,8 @@ function closeModal() {
     overlay.classList.remove('open');
     modalScore.textContent = '';
 }
+
+// Key controls
 
 window.addEventListener('keydown', (e) => {
     if (game.over) {
