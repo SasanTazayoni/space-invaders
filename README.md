@@ -202,6 +202,7 @@ A great way to test is to get users to try the application and give feedback. Ad
 | Nils | Good stuff - I get a little bit of flickering when I load the page once in the game it's running smooth, very cool! |
 | Adam | Great stuff Sasan, only thing I noticed is when you press spacebar to shoot it scrolls the page down to the end. Other than that it's very very good! |
 | Karolina | This is really cool Sasan! Very well done! One thing I noticed is when I hover over the buttons I see semi-transparent white stripes and I experience flickering across the screen. Seems to have something to do with the effect you have on the Space Invaders text? |
+| Stephen | Really smooth. The only thing I noticed was that sometimes, when a new set of enemies spawn, they are overlapped - not too sure what was happening, but maybe two sets are spawning at the same time. |
 
 ### Lighthouse testing
 
@@ -219,7 +220,7 @@ As the results show, the application is highly compatible across all browsers.
 
 ### Bugs
 
-* If the screen is resized during the game, it may delay the animate function which is constantly firing. This results in unusual behaviour such as aliens spawning in irregular patterns.
+* If the screen is resized or the browser lags during the game, it may delay the animate function which is constantly firing. This results in unusual behaviour such as aliens spawning in irregular patterns.
 * If the console is open while the game is running, the game might stutter or slow down.
 * Sometimes an alien projectile disappears before it reaches the bottom of the screen. This is to do with how projectiles are cleared from the array that they are passed into.
 
@@ -236,6 +237,6 @@ As the results show, the application is highly compatible across all browsers.
 
 ## Credits
 
-* Thanks to Edna, Stefania, Joe, Mark and Saba for thoroughly testing out my web application and giving useful suggestions.
+* Thanks to Edna, Stefania, Joe, Mark, Saba, Nils, Adam, Karolina and Stephen for thoroughly testing out my web application and giving useful suggestions.
 * Thanks to [Chris Courses](https://www.youtube.com/@ChrisCourses) from YouTube for a tutorial on how to build this project.
 * Thanks to Muhammed Irshad from [Online Tutorials](https://www.youtube.com/@OnlineTutorialsYT) from YouTube for all special effects and animations.
