@@ -788,7 +788,7 @@ function animate() {
     if (frames % randomInterval === 0) {
         grids.push(new Grid());
         frames = 0;
-        Math.floor((Math.random() * spawnRate) + spawnRate);
+        randomInterval = Math.floor((Math.random() * spawnRate) + spawnRate);
     }
 
     frames++;
