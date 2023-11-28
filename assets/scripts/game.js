@@ -478,7 +478,7 @@ class Invader {
                 },
                 velocity: {
                     x: 0,
-                    y: 8
+                    y: 7
                 },
                 soundEnabled
             }));
@@ -490,7 +490,7 @@ class Invader {
                 },
                 velocity: {
                     x: 0,
-                    y: 11
+                    y: 10
                 },
                 soundEnabled
             }));
@@ -526,7 +526,7 @@ class Grid {
 
         this.invaders = [];
 
-        const columns = Math.floor(Math.random() * 4 + 5);
+        const columns = Math.floor(Math.random() * 3 + 5);
         const rows = 4;   
 
         this.width = columns * 40;
