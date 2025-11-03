@@ -548,7 +548,7 @@ class Grid {
     };
 
     this.velocity = {
-      x: 1.5,
+      x: 1.8,
       y: 0,
     };
 
