@@ -1,4 +1,4 @@
-const soundToggler = document.querySelector("[data-sound-toggler");
+const soundToggler = document.querySelector("[data-sound-toggler]");
 let soundEnabled =
   sessionStorage.getItem("soundEnabled") === "false" ? false : true;
 const canvas = document.querySelector("[data-canvas]");
@@ -36,6 +36,24 @@ const modalScore = document.querySelector("[data-end-score]");
 const playBtn = document.querySelector("[data-play-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
+// Audio pool — reuses Audio objects instead of creating new ones per sound
+
+const audioPools = {};
+
+function playPooledSound(src, volume) {
+  if (!audioPools[src]) audioPools[src] = [];
+  const pool = audioPools[src];
+  let audio = pool.find((a) => a.ended || a.paused);
+  if (!audio) {
+    audio = new Audio(src);
+    pool.push(audio);
+  } else {
+    audio.currentTime = 0;
+  }
+  audio.volume = volume;
+  audio.play();
+}
+
 // Sound
 
 soundToggler.addEventListener("click", () => {
@@ -53,7 +71,6 @@ function updateSoundButton() {
     soundToggler.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
     soundToggler.classList.add("active");
   }
-  console.log(soundEnabled);
 }
 
 // Reset game
@@ -110,7 +127,7 @@ function resetGame() {
         },
         radius: Math.random() * 2,
         color: "white",
-      })
+      }),
     );
   }
 
@@ -158,7 +175,7 @@ class Player {
       this.position.x,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
 
     context.restore();
@@ -190,7 +207,7 @@ class Projectile {
       this.position.x - this.width / 2,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
     context.fillStyle = "white";
     context.fill();
@@ -199,9 +216,7 @@ class Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio("./assets/sounds/ship-fire.mp3");
-      sound.volume = 0.3;
-      sound.play();
+      playPooledSound("./assets/sounds/ship-fire.mp3", 0.3);
     }
   }
 
@@ -216,7 +231,6 @@ class GreenProjectile extends Projectile {
   constructor({ position, velocity, soundEnabled }) {
     super({ position, velocity, soundEnabled });
     this.radius = 4;
-    this.playSound();
   }
 
   draw() {
@@ -229,9 +243,7 @@ class GreenProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio("./assets/sounds/small-laser.mp3");
-      sound.volume = 0.3;
-      sound.play();
+      playPooledSound("./assets/sounds/small-laser.mp3", 0.3);
     }
   }
 }
@@ -241,7 +253,6 @@ class YellowProjectile extends Projectile {
     super({ position, velocity, soundEnabled });
     this.height = 20;
     this.width = 4;
-    this.playSound();
   }
 
   draw() {
@@ -250,7 +261,7 @@ class YellowProjectile extends Projectile {
       this.position.x - this.width / 2,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
     context.fillStyle = "yellow";
     context.fill();
@@ -259,9 +270,7 @@ class YellowProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio("./assets/sounds/medium-laser.mp3");
-      sound.volume = 0.2;
-      sound.play();
+      playPooledSound("./assets/sounds/medium-laser.mp3", 0.2);
     }
   }
 }
@@ -271,7 +280,6 @@ class OrangeProjectile extends Projectile {
     super({ position, velocity, soundEnabled });
     this.height = 32;
     this.width = 6;
-    this.playSound();
   }
 
   draw() {
@@ -280,7 +288,7 @@ class OrangeProjectile extends Projectile {
       this.position.x - this.width / 2,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
     context.fillStyle = "orange";
     context.fill();
@@ -289,9 +297,7 @@ class OrangeProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio("./assets/sounds/big-laser.mp3");
-      sound.volume = 0.2;
-      sound.play();
+      playPooledSound("./assets/sounds/big-laser.mp3", 0.2);
     }
   }
 }
@@ -301,7 +307,6 @@ class RedProjectile extends Projectile {
     super({ position, velocity, soundEnabled });
     this.height = 180;
     this.width = 9;
-    this.playSound();
   }
 
   draw() {
@@ -310,7 +315,7 @@ class RedProjectile extends Projectile {
       this.position.x - this.width / 2,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
     context.fillStyle = "crimson";
     context.fill();
@@ -319,9 +324,7 @@ class RedProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio("./assets/sounds/enormous-laser.mp3");
-      sound.volume = 0.1;
-      sound.play();
+      playPooledSound("./assets/sounds/enormous-laser.mp3", 0.1);
     }
   }
 }
@@ -353,10 +356,7 @@ class AnimatedParticle {
 
   playSound() {
     if (this.soundEnabled) {
-      const sound = new Audio(this.getSoundFilePath());
-      sound.volume = this.getSoundVolume();
-      sound.volume = 0.8;
-      sound.play();
+      playPooledSound(this.getSoundFilePath(), this.getSoundVolume());
     }
   }
 
@@ -465,7 +465,7 @@ class Invader {
       this.position.x,
       this.position.y,
       this.width,
-      this.height
+      this.height,
     );
   }
 
@@ -490,7 +490,7 @@ class Invader {
             y: 5,
           },
           soundEnabled,
-        })
+        }),
       );
     } else if (this.type === "invaderType4") {
       invaderProjectiles.push(
@@ -504,7 +504,7 @@ class Invader {
             y: 7,
           },
           soundEnabled,
-        })
+        }),
       );
     } else if (this.type === "invaderType5") {
       invaderProjectiles.push(
@@ -518,7 +518,7 @@ class Invader {
             y: 10,
           },
           soundEnabled,
-        })
+        }),
       );
     } else {
       invaderProjectiles.push(
@@ -532,7 +532,7 @@ class Invader {
             y: 3,
           },
           soundEnabled,
-        })
+        }),
       );
     }
   }
@@ -567,7 +567,7 @@ class Grid {
               x: x * 40,
               y: y * 30,
             },
-          })
+          }),
         );
       }
     }
@@ -634,7 +634,7 @@ for (let i = 0; i < 100; i++) {
       },
       radius: Math.random() * 2,
       color: "white",
-    })
+    }),
   );
 }
 
@@ -646,35 +646,25 @@ function animate() {
   context.fillStyle = "#14011f";
   context.fillRect(0, 0, canvas.width, canvas.height);
 
-  particles.forEach((particle, i) => {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const particle = particles[i];
     if (particle.position.y - particle.radius >= canvas.height) {
       particle.position.x = Math.random() * canvas.width;
       particle.position.y = -particle.radius;
     }
 
     if (particle.opacity <= 0) {
-      setTimeout(() => {
-        particles.splice(i, 1);
-      }, 0);
+      particles.splice(i, 1);
     } else {
       particle.update();
     }
-  });
+  }
 
   player.update();
 
-  invaderProjectiles.forEach((invaderProjectile, index) => {
-    if (
-      invaderProjectile.position.y + invaderProjectile.radius >=
-        canvas.height ||
-      invaderProjectile.position.y + invaderProjectile.height >= canvas.height
-    ) {
-      setTimeout(() => {
-        invaderProjectiles.splice(index, 1);
-      }, 0);
-    } else {
-      invaderProjectile.update();
-    }
+  for (let index = invaderProjectiles.length - 1; index >= 0; index--) {
+    const invaderProjectile = invaderProjectiles[index];
+
     // projectile hits player
     if (
       (invaderProjectile.position.y + invaderProjectile.radius >=
@@ -688,11 +678,9 @@ function animate() {
           player.position.x &&
         invaderProjectile.position.x <= player.position.x + player.width)
     ) {
-      setTimeout(() => {
-        invaderProjectiles.splice(index, 1);
-        player.opacity = 0;
-        game.over = true;
-      }, 0);
+      invaderProjectiles.splice(index, 1);
+      player.opacity = 0;
+      game.over = true;
 
       setTimeout(() => {
         game.active = false;
@@ -720,21 +708,31 @@ function animate() {
             color: "#feffe8",
             fades: true,
             soundEnabled: !soundEnabled ? false : i === 0,
-          })
+          }),
         );
       }
+      continue;
     }
-  });
 
-  projectiles.forEach((projectile, index) => {
+    if (
+      invaderProjectile.position.y + invaderProjectile.radius >=
+        canvas.height ||
+      invaderProjectile.position.y + invaderProjectile.height >= canvas.height
+    ) {
+      invaderProjectiles.splice(index, 1);
+    } else {
+      invaderProjectile.update();
+    }
+  }
+
+  for (let index = projectiles.length - 1; index >= 0; index--) {
+    const projectile = projectiles[index];
     if (projectile.position.y + projectile.height <= 0) {
-      setTimeout(() => {
-        projectiles.splice(index, 1);
-      }, 0);
+      projectiles.splice(index, 1);
     } else {
       projectile.update();
     }
-  });
+  }
 
   grids.forEach((grid) => {
     grid.update();
@@ -744,20 +742,28 @@ function animate() {
     // Generate a random shooting interval within the specified range
     const randomShootingInterval =
       Math.floor(
-        Math.random() * (maxShootingInterval - minShootingInterval + 1)
+        Math.random() * (maxShootingInterval - minShootingInterval + 1),
       ) + minShootingInterval;
     // Check if the current frame matches the random interval
     if (frames % randomShootingInterval === 0 && grid.invaders.length > 0) {
       // Select random invaders to shoot
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
-        invaderProjectiles
+        invaderProjectiles,
       );
     }
 
-    grid.invaders.forEach((invader, i) => {
+    const hitInvaders = new Set();
+    const hitProjectiles = new Set();
+
+    grid.invaders.forEach((invader) => {
       invader.update({ velocity: grid.velocity });
       // projectiles hit alien
-      projectiles.forEach((projectile, j) => {
+      projectiles.forEach((projectile) => {
+        if (
+          hitInvaders.has(invader) ||
+          hitProjectiles.has(projectile)
+        ) return;
+
         if (
           projectile.position.y - projectile.height / 2 <=
             invader.position?.y + invader.height &&
@@ -766,74 +772,66 @@ function animate() {
           projectile.position.x - projectile.width / 2 <=
             invader.position.x + invader.width
         ) {
-          setTimeout(() => {
-            const invaderFound = grid.invaders.find(
-              (invader2) => invader2 === invader
+          hitInvaders.add(invader);
+          hitProjectiles.add(projectile);
+
+          if (
+            invader.type === "invaderType1" ||
+            invader.type === "invaderType2"
+          ) {
+            score += 200;
+          } else if (invader.type === "invaderType3") {
+            score += 400;
+          } else if (invader.type === "invaderType4") {
+            score += 600;
+          } else {
+            score += 1000;
+          }
+          gameScore.innerHTML = score;
+
+          for (let i = 0; i < 15; i++) {
+            particles.push(
+              new Particle({
+                position: {
+                  x: invader.position.x + invader.width / 2,
+                  y: invader.position.y + invader.height / 2,
+                },
+                velocity: {
+                  x: (Math.random() - 0.5) * 2,
+                  y: (Math.random() - 0.5) * 2,
+                },
+                radius: Math.random() * 3,
+                color: "white",
+                fades: true,
+                soundEnabled: !soundEnabled ? false : i === 0,
+              }),
             );
-            const projectileFound = projectiles.find(
-              (projectile2) => projectile2 === projectile
-            );
-
-            // remove invader and projectile and update score
-            if (invaderFound && projectileFound) {
-              if (
-                invader.type === "invaderType1" ||
-                invader.type === "invaderType2"
-              ) {
-                score += 200;
-              } else if (invader.type === "invaderType3") {
-                score += 400;
-              } else if (invader.type === "invaderType4") {
-                score += 600;
-              } else {
-                score += 1000;
-              }
-              gameScore.innerHTML = score;
-
-              for (let i = 0; i < 15; i++) {
-                particles.push(
-                  new Particle({
-                    position: {
-                      x: invader.position.x + invader.width / 2,
-                      y: invader.position.y + invader.height / 2,
-                    },
-                    velocity: {
-                      x: (Math.random() - 0.5) * 2,
-                      y: (Math.random() - 0.5) * 2,
-                    },
-                    radius: Math.random() * 3,
-                    color: "white",
-                    fades: true,
-                    soundEnabled: !soundEnabled ? false : i === 0,
-                  })
-                );
-              }
-
-              grid.invaders.splice(i, 1);
-              projectiles.splice(j, 1);
-
-              if (grid.invaders.length > 0) {
-                const firstInvader = grid.invaders[0];
-                const lastInvader = grid.invaders[grid.invaders.length - 1];
-
-                grid.width =
-                  lastInvader.position.x -
-                  firstInvader.position.x +
-                  lastInvader.width;
-                grid.position.x = firstInvader.position.x;
-              }
-
-              if (grid.invaders.length === 0) {
-                score += 10000;
-              }
-
-              gameDifficultyIncrease(score);
-              gameScore.innerHTML = score;
-            }
-          }, 0);
+          }
         }
       });
     });
+
+    if (hitInvaders.size > 0) {
+      grid.invaders = grid.invaders.filter((inv) => !hitInvaders.has(inv));
+      projectiles = projectiles.filter((proj) => !hitProjectiles.has(proj));
+
+      if (grid.invaders.length > 0) {
+        const firstInvader = grid.invaders[0];
+        const lastInvader = grid.invaders[grid.invaders.length - 1];
+        grid.width =
+          lastInvader.position.x -
+          firstInvader.position.x +
+          lastInvader.width;
+        grid.position.x = firstInvader.position.x;
+      }
+
+      if (grid.invaders.length === 0) {
+        score += 10000;
+      }
+
+      gameDifficultyIncrease(score);
+      gameScore.innerHTML = score;
+    }
   });
 
   if (
@@ -874,7 +872,7 @@ function gameDifficultyIncrease(score) {
       }
 
       thresholdsTriggered[i] = true;
-      console.log(`Checkpoint ${i + 1} reached!`);
+
       stageClearMessage.textContent = `Stage ${i + 1} cleared`;
       stageClearModal.classList.add("open");
       setTimeout(function () {
@@ -936,7 +934,7 @@ window.addEventListener("keydown", (e) => {
               y: attackSpeed,
             },
             soundEnabled,
-          })
+          }),
         );
 
         firstProjectile = false;
@@ -954,10 +952,10 @@ window.addEventListener("keydown", (e) => {
                   y: attackSpeed,
                 },
                 soundEnabled,
-              })
+              }),
             );
           },
-          firstProjectile ? 0 : attackDelay
+          firstProjectile ? 0 : attackDelay,
         );
       }
       break;
