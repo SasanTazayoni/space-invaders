@@ -97,12 +97,16 @@ function playPooledSound(src, volume) {
   let audio = pool.find((a) => a.ended || a.paused);
   if (!audio) {
     audio = new Audio(src);
+    audio.onerror = () => {
+      console.error("Failed to load audio:", src);
+      pool.splice(pool.indexOf(audio), 1);
+    };
     pool.push(audio);
   } else {
     audio.currentTime = 0;
   }
   audio.volume = volume;
-  audio.play();
+  audio.play().catch(() => {});
 }
 
 // Reset game
@@ -191,6 +195,9 @@ class Player {
         x: canvas.width / 2 - this.width / 2,
         y: canvas.height - this.height,
       };
+    };
+    image.onerror = () => {
+      console.error("Failed to load player image:", image.src);
     };
   }
 
@@ -484,6 +491,9 @@ class Invader {
         x: position.x,
         y: position.y,
       };
+    };
+    image.onerror = () => {
+      console.error("Failed to load invader image:", image.src);
     };
   }
 
