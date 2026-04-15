@@ -1,6 +1,3 @@
-const soundToggler = document.querySelector("[data-sound-toggler]");
-let soundEnabled =
-  sessionStorage.getItem("soundEnabled") === "false" ? false : true;
 const canvas = document.querySelector("[data-canvas]");
 const gameScore = document.querySelector("[data-score]");
 const context = canvas.getContext("2d");
@@ -54,30 +51,10 @@ function playPooledSound(src, volume) {
   audio.play();
 }
 
-// Sound
-
-soundToggler.addEventListener("click", () => {
-  soundEnabled = !soundEnabled;
-  updateSoundButton();
-  soundToggler.blur();
-  sessionStorage.setItem("soundEnabled", soundEnabled);
-});
-
-function updateSoundButton() {
-  if (!soundEnabled) {
-    soundToggler.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-    soundToggler.classList.remove("active");
-  } else {
-    soundToggler.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    soundToggler.classList.add("active");
-  }
-}
-
 // Reset game
 
 document.addEventListener("DOMContentLoaded", () => {
   resetGame();
-  updateSoundButton();
 });
 
 playBtn.addEventListener("click", () => {
