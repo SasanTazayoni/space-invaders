@@ -198,7 +198,7 @@ I used the following websites to check my code for syntax errors:
 ![Game play](documentation/gameplay.jpg) <br>
 
 - As a user, I seek progressively increasing difficulty levels as I advance in the game to provide a more challenging experience.
-  - When a stage is cleared, the progressively becomes more difficult with a higher chance of tougher enemies and an increased spawn rate: <br>
+  - When a stage is cleared, the game progressively becomes more difficult with a higher chance of tougher enemies and an increased spawn rate: <br>
 
 ![Difficulty increase trigger](documentation/stageclear.png) <br>
 
@@ -240,9 +240,18 @@ As the results show, the application is highly compatible across all browsers.
 
 ### Bugs
 
-- If the screen is resized or the browser lags during the game, it may delay the animate function which is constantly firing. This results in unusual behaviour such as aliens spawning in irregular patterns.
+#### Known bugs
+
+- The game moves everything a fixed amount on every screen refresh rather than by elapsed time, so it runs faster on high-refresh-rate monitors (for example 144 Hz) and slows down when the browser lags.
 - If the console is open while the game is running, the game might stutter or slow down.
-- Sometimes an alien projectile disappears before it reaches the bottom of the screen. This is to do with how projectiles are cleared from the array that they are passed into.
+
+#### Fixed bugs
+
+- Holding Space fired one shot and then threw errors instead of firing again, because a variable had been renamed in one place but not the other.
+- Aliens stopped spawning after stage 5. The spawn delay was being reduced four times per stage instead of once, until it reached zero.
+- Alien projectiles sometimes vanished before reaching the bottom of the screen, because their hitboxes didn't match what was drawn. Every projectile now uses one hitbox that matches its shape.
+- Aliens could pass through the ship and keep shooting from below the screen. The game now ends when an alien reaches the ship's row.
+- The menu and the game stopped working when the browser blocked site storage.
 
 ## Deployment
 
