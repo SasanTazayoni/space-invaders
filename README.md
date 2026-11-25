@@ -41,6 +41,14 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ## Features
 
+### How to play
+
+- **Move:** A and D, the left and right arrow keys, or 4 and 6 on the numpad.
+- **Fire:** press Space. Hold it down to keep firing, one shot every 2 seconds.
+- **Score:** each alien is worth 200 to 1,000 points depending on its colour, and clearing a whole wave adds 10,000.
+- **Stages:** every 100,000 points clears a stage. Each stage brings more of the tougher aliens and makes new waves arrive sooner. There are 10 stages.
+- **Game over:** when an alien projectile hits your ship, or when any alien reaches your ship's row.
+
 ### Current features
 
 - On the main menu, the highest score is retrieved from the local storage and shown with a bouncing animation to catch the user's attention. If there is no high score, nothing displays: <br>
@@ -76,7 +84,7 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ![Game title](documentation/title.png) <br>
 
-- At the bottom of the page is a link to this github along the credits, with a themed hover effect on the github icon: <br>
+- At the bottom of the page is a footer with a link to this project's GitHub repository. The GitHub icon glows on hover and on keyboard focus: <br>
 
 ![Credits and github link](documentation/githublink.png) <br>
 ![Hover effect on github link](documentation/themedhovereffect.png) <br>
@@ -89,13 +97,21 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ![Difficulty increase trigger](documentation/stageclear.png) <br>
 
-- When the ship is destroyed by an alien projectile, the game ends and a modal opens showing your current score. Within this menu is an option to play again via the "Play again" button or an option to return to the main menu via the "Main menu" button: <br>
+- The game ends when an alien projectile hits the ship, or when any alien reaches the ship's row. A modal then opens showing your score, with a "Play again" button to start a new game and a "Main menu" button to go back: <br>
 
 ![End game modal](documentation/endgamemodal.png) <br>
 
 - When the game ends the local storage is checked against the current score. If the current score is higher animated text appears saying "NEW HIGH SCORE": <br>
 
 ![New high score achieved](documentation/newhighscore.png) <br>
+
+### Accessibility
+
+- The Instructions and Game over screens are proper dialogs: focus moves into them and Tab stays inside. Escape or clicking outside closes the instructions; the Game over screen needs you to pick "Play again" or "Main menu", so Escape is blocked there.
+- Screen readers hear "Space Invaders", "Highest score: …" and "New high score!" instead of the animated letters one by one, and each cleared stage is announced.
+- The sound button tells screen readers whether sound is on or off, and the game area has a label describing the controls.
+- With "reduce motion" turned on in the system settings, the title, high score and reset-button animations stay still.
+- If the browser blocks site storage, the game still runs; it just can't save the high score or the sound setting.
 
 ### Future features
 
@@ -106,7 +122,7 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 - Mini bosses can be added into the game after each stage.
 - More ranks of aliens can be added (i.e more powerful than the red aliens with more pressurising projectiles).
 - A game difficulty can be implemented for those who are more casual gamers as well as for the skilled gamers.
-- It could possible be made responsive (I am unsure of how to establish this).
+- It could possibly be made responsive (I am unsure of how to establish this).
 
 ## Technologies used
 
