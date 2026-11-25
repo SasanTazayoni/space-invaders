@@ -26,20 +26,23 @@
     <main id="main">
       <nav>
         <div class="current-high-score visible" data-current-high-score>
-          <span>H</span>
-          <span>I</span>
-          <span>G</span>
-          <span>H</span>
-          <span>E</span>
-          <span>S</span>
-          <span class="word-end">T</span>
-          <span>S</span>
-          <span>C</span>
-          <span>O</span>
-          <span>R</span>
-          <span>E</span>
-          <span class="word-end">:</span>
-          <span></span>
+          <span class="visually-hidden" data-high-score-label></span>
+          <span class="letters" aria-hidden="true">
+            <span style="--i: 0">H</span>
+            <span style="--i: 1">I</span>
+            <span style="--i: 2">G</span>
+            <span style="--i: 3">H</span>
+            <span style="--i: 4">E</span>
+            <span style="--i: 5">S</span>
+            <span class="word-end" style="--i: 6">T</span>
+            <span style="--i: 7">S</span>
+            <span style="--i: 8">C</span>
+            <span style="--i: 9">O</span>
+            <span style="--i: 10">R</span>
+            <span style="--i: 11">E</span>
+            <span class="word-end" style="--i: 12">:</span>
+            <span style="--i: 13" data-high-score-digits></span>
+          </span>
         </div>
         <button class="button button--purple nav-button" data-reset-button>
           Reset high score
@@ -55,19 +58,22 @@
       </nav>
       <header>
         <h1 class="game-title">
-          <span>S</span>
-          <span>p</span>
-          <span>a</span>
-          <span>c</span>
-          <span class="word-end-title">e</span>
-          <span>I</span>
-          <span>n</span>
-          <span>v</span>
-          <span>a</span>
-          <span>d</span>
-          <span>e</span>
-          <span>r</span>
-          <span>s</span>
+          <span class="visually-hidden">Space Invaders</span>
+          <span class="letters" aria-hidden="true">
+            <span style="--i: 0">S</span>
+            <span style="--i: 1">p</span>
+            <span style="--i: 2">a</span>
+            <span style="--i: 3">c</span>
+            <span class="word-end-title" style="--i: 4">e</span>
+            <span style="--i: 5">I</span>
+            <span style="--i: 6">n</span>
+            <span style="--i: 7">v</span>
+            <span style="--i: 8">a</span>
+            <span style="--i: 9">d</span>
+            <span style="--i: 10">e</span>
+            <span style="--i: 11">r</span>
+            <span style="--i: 12">s</span>
+          </span>
         </h1>
       </header>
       <div class="btn-container">

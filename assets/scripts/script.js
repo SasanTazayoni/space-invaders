@@ -5,21 +5,14 @@ const instructionsBtn = document.querySelector("[data-instructions-button]");
 const startGameModal = document.querySelector("[data-start-game-modal]");
 const closeBtn = document.querySelector("[data-close-btn]");
 
-// High score text
-
-function addLetterSpacingToText(text) {
-  return text
-    .split("")
-    .map((letter) => `<span>${letter}</span>`)
-    .join("&nbsp;");
-}
+// High score text — the visible digits are spaced out like the letters
+// before them; screen readers get the plain number from the hidden label
 
 if (storedHighScore > 0) {
-  const lastSpan = currentHighScore.querySelector("span:last-child");
-  if (lastSpan) {
-    const spacedText = addLetterSpacingToText(storedHighScore.toString());
-    lastSpan.innerHTML = spacedText;
-  }
+  currentHighScore.querySelector("[data-high-score-label]").textContent =
+    `Highest score: ${storedHighScore}`;
+  currentHighScore.querySelector("[data-high-score-digits]").textContent =
+    storedHighScore.toString().split("").join(" ");
 } else {
   currentHighScore.classList.remove("visible");
 }
@@ -29,11 +22,12 @@ if (storedHighScore > 0) {
 resetBtn.addEventListener("click", () => {
   clearHighScore();
 
+  // restart the wobble animation: remove the class, force the browser to
+  // notice (reading offsetWidth), then add it back — no timer to keep in
+  // sync with the animation's length in the CSS
+  resetBtn.classList.remove("explode");
+  void resetBtn.offsetWidth;
   resetBtn.classList.add("explode");
-
-  setTimeout(() => {
-    resetBtn.classList.remove("explode");
-  }, 300);
 
   currentHighScore.classList.remove("visible");
 

@@ -17,7 +17,10 @@ const CONFIG = {
     alien5: "./assets/images/alien5.png",
   },
   colors: {
-    background: "#14011f",
+    // shared with the page via the --color-background CSS variable
+    background: getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-background")
+      .trim(),
     star: "white",
     debris: "white",
     explosion: "#feffe8",
