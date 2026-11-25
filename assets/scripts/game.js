@@ -240,7 +240,7 @@ function resetGame() {
   game.over = false;
   game.active = true;
   score = 0;
-  gameScore.innerHTML = score;
+  gameScore.textContent = score;
   spawnRate = CONFIG.spawnRate.initial;
   randomInterval = nextSpawnInterval();
   invaderFrequencies = [...CONFIG.invaderFrequencies];
@@ -659,7 +659,7 @@ function animate() {
           hitProjectiles.add(projectile);
 
           score += invader.type.points;
-          gameScore.innerHTML = score;
+          gameScore.textContent = score;
 
           spawnBurst({
             x: invader.position.x + invader.width / 2,
@@ -690,7 +690,7 @@ function animate() {
       }
 
       gameDifficultyIncrease(score);
-      gameScore.innerHTML = score;
+      gameScore.textContent = score;
     }
   });
 

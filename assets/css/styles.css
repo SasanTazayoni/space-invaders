@@ -226,10 +226,15 @@ footer p {
   text-align: center;
 }
 
-.github-link i {
-  width: max-content;
-  border-radius: 10px;
-  font-size: 20px;
+/* Inline SVG icons take their colour from the surrounding text */
+.icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.github-link .icon {
+  border-radius: 50%;
   transition:
     opacity 0.3s,
     box-shadow 0.3s;
@@ -239,7 +244,8 @@ footer p {
   opacity: 0.5;
 }
 
-.github-link i:hover {
+.github-link:hover .icon,
+.github-link:focus-visible .icon {
   opacity: 1;
   box-shadow:
     0 0 5px var(--color-primary),
@@ -261,35 +267,32 @@ main {
   font-family: "Exo 2", Arial, Helvetica, sans-serif;
 }
 
-.sound-toggler.active {
-  position: absolute;
-  top: -60px;
-  right: 0px;
-  background: black;
-  border: 2px solid var(--color-primary);
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.sound-toggler.active > i {
-  color: var(--color-primary);
-}
-
+/* Sound on (aria-pressed="true") is yellow with the speaker icon; sound off
+   is purple with the crossed-out icon */
 .sound-toggler {
   position: absolute;
   top: -60px;
   right: 0px;
   background: black;
-  border: 2px solid var(--color-secondary);
-  padding: 10px;
+  color: var(--color-secondary);
+  border: 2px solid currentColor;
+  padding: 9px;
   border-radius: 50%;
   cursor: pointer;
 }
 
-.sound-toggler i {
-  color: var(--color-secondary);
-  font-size: 20px;
+.sound-toggler .icon {
+  width: 26px;
+  height: 26px;
+}
+
+.sound-toggler[aria-pressed="true"] {
+  color: var(--color-primary);
+}
+
+.sound-toggler[aria-pressed="true"] .icon-sound-off,
+.sound-toggler[aria-pressed="false"] .icon-sound-on {
+  display: none;
 }
 
 #canvas__container {

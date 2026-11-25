@@ -1,21 +1,16 @@
 const soundToggler = document.querySelector("[data-sound-toggler]");
 
+// aria-pressed is the single source of the button's state: screen readers
+// announce it ("Sound, toggle button, pressed") and the CSS uses it to pick
+// the icon and colour
+
 soundToggler.addEventListener("click", () => {
   setSoundEnabled(!isSoundEnabled());
   updateSoundButton();
-  soundToggler.blur();
 });
 
 function updateSoundButton() {
-  if (!isSoundEnabled()) {
-    soundToggler.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-    soundToggler.classList.remove("active");
-  } else {
-    soundToggler.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-    soundToggler.classList.add("active");
-  }
+  soundToggler.setAttribute("aria-pressed", String(isSoundEnabled()));
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  updateSoundButton();
-});
+updateSoundButton();
