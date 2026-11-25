@@ -9,13 +9,12 @@ const closeBtn = document.querySelector('[data-close-btn]');
 // High score text
 
 function addLetterSpacingToText(text) {
-  return text.split('').map(letter => `<span class="letter">${letter}</span>`).join('&nbsp;');
+  return text.split('').map(letter => `<span>${letter}</span>`).join('&nbsp;');
 }
 
 if (storedHighScore > 0) {
     const lastSpan = currentHighScore.querySelector('span:last-child');
     if (lastSpan) {
-        lastSpan.textContent = storedHighScore;
         const spacedText = addLetterSpacingToText(storedHighScore.toString());
         lastSpan.innerHTML = spacedText;
     }

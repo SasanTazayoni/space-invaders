@@ -74,10 +74,11 @@ const gameScore = document.querySelector("[data-score]");
 const context = canvas.getContext("2d");
 let projectileInterval = null;
 let gameOverTimeout = null;
+let stageClearTimeout = null;
 let firstProjectile = true;
 let frames = 0;
 let spawnRate = CONFIG.spawnRate.initial;
-let randomInterval = Math.floor(Math.random() * spawnRate + spawnRate);
+let randomInterval = nextSpawnInterval();
 let invaderFrequencies = [...CONFIG.invaderFrequencies];
 let thresholdsTriggered = Array(CONFIG.scoreThresholds.length).fill(false);
 const stageClearModal = document.querySelector("[data-stage-clear-modal]");
@@ -112,10 +113,6 @@ function playPooledSound(src, volume) {
 
 // Reset game
 
-document.addEventListener("DOMContentLoaded", () => {
-  resetGame();
-});
-
 playBtn.addEventListener("click", () => {
   closeModal();
   clearCanvas();
@@ -130,6 +127,12 @@ function clearCanvas() {
 function resetGame() {
   clearTimeout(gameOverTimeout);
   gameOverTimeout = null;
+  clearTimeout(stageClearTimeout);
+  stageClearTimeout = null;
+  stageClearModal.classList.remove("open");
+  stageClearMessage.textContent = "";
+  clearInterval(projectileInterval);
+  projectileInterval = null;
   thresholdsTriggered = Array(CONFIG.scoreThresholds.length).fill(false);
 
   game.over = false;
@@ -137,11 +140,8 @@ function resetGame() {
   score = 0;
   gameScore.innerHTML = score;
   spawnRate = CONFIG.spawnRate.initial;
+  randomInterval = nextSpawnInterval();
   invaderFrequencies = [...CONFIG.invaderFrequencies];
-
-  if (player) {
-    player = null;
-  }
 
   player = new Player();
   particles = [];
@@ -632,7 +632,7 @@ class Grid {
 
 // Player movement
 
-let player = new Player();
+let player;
 let projectiles = [];
 let grids = [];
 let invaderProjectiles = [];
@@ -662,25 +662,6 @@ let game = {
 };
 
 let score = 0;
-
-// Background animation
-
-for (let i = 0; i < 100; i++) {
-  particles.push(
-    new Particle({
-      position: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      },
-      velocity: {
-        x: 0,
-        y: 0.3,
-      },
-      radius: Math.random() * 2,
-      color: "white",
-    }),
-  );
-}
 
 // Game loop
 
@@ -890,13 +871,18 @@ function animate() {
   if (frames % randomInterval === 0) {
     grids.push(new Grid());
     frames = 0;
-    randomInterval = Math.floor(Math.random() * spawnRate + spawnRate);
+    randomInterval = nextSpawnInterval();
   }
 
   frames++;
 }
 
+resetGame();
 animate();
+
+function nextSpawnInterval() {
+  return Math.floor(Math.random() * spawnRate + spawnRate);
+}
 
 // Increase difficulty function
 
@@ -906,14 +892,16 @@ function gameDifficultyIncrease(score) {
       for (let j = 0; j < invaderFrequencies.length; j++) {
         const newFrequency = (invaderFrequencies[j] -= CONFIG.frequencyDecreases[j]);
         invaderFrequencies[j] = parseFloat(newFrequency.toFixed(3));
-        spawnRate -= CONFIG.spawnRate.decreasePerStage;
       }
+      spawnRate -= CONFIG.spawnRate.decreasePerStage;
 
       thresholdsTriggered[i] = true;
 
       stageClearMessage.textContent = `Stage ${i + 1} cleared`;
       stageClearModal.classList.add("open");
-      setTimeout(function () {
+      clearTimeout(stageClearTimeout);
+      stageClearTimeout = setTimeout(function () {
+        stageClearTimeout = null;
         stageClearModal.classList.remove("open");
         stageClearMessage.textContent = "";
       }, CONFIG.timing.stageClearDuration);
