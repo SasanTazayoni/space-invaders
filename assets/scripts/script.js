@@ -1,4 +1,4 @@
-const storedHighScore = parseInt(localStorage.getItem("High score")) || 0;
+const storedHighScore = getHighScore();
 const currentHighScore = document.querySelector("[data-current-high-score]");
 const resetBtn = document.querySelector("[data-reset-button]");
 const instructionsBtn = document.querySelector("[data-instructions-button]");
@@ -27,16 +27,8 @@ if (storedHighScore > 0) {
 
 // Reset button
 
-function playResetSound() {
-  if (soundEnabled) {
-    const sound = new Audio("assets/sounds/ship-destroyed.mp3");
-    sound.volume = 1;
-    sound.play();
-  }
-}
-
 resetBtn.addEventListener("click", () => {
-  localStorage.removeItem("High score");
+  clearHighScore();
 
   resetBtn.classList.add("explode");
 
@@ -46,7 +38,7 @@ resetBtn.addEventListener("click", () => {
 
   currentHighScore.classList.remove("visible");
 
-  playResetSound();
+  playAudio("assets/sounds/ship-destroyed.mp3", 1);
 });
 
 // Modal open and close

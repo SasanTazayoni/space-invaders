@@ -185,32 +185,11 @@ function showLoadError() {
   );
 }
 
-// Audio pool — reuses Audio objects instead of creating new ones per sound
-
-const audioPools = {};
-
-function playPooledSound(src, volume) {
-  if (!audioPools[src]) audioPools[src] = [];
-  const pool = audioPools[src];
-  let audio = pool.find((a) => a.ended || a.paused);
-  if (!audio) {
-    audio = new Audio(src);
-    audio.onerror = () => {
-      console.error("Failed to load audio:", src);
-      pool.splice(pool.indexOf(audio), 1);
-    };
-    pool.push(audio);
-  } else {
-    audio.currentTime = 0;
-  }
-  audio.volume = volume;
-  audio.play().catch(() => {});
-}
+// Sound — playAudio (shared.js) handles pooling and the sound setting
 
 function playSound(name) {
-  if (!soundEnabled) return;
   const { src, volume } = CONFIG.sounds[name];
-  playPooledSound(src, volume);
+  playAudio(src, volume);
 }
 
 // Collision helpers
@@ -787,10 +766,9 @@ function destroyPlayer() {
   gameOverTimeout = setTimeout(() => {
     gameOverTimeout = null;
     game.active = false;
-    const storedHighScore = parseInt(localStorage.getItem("High score")) || 0;
-    if (score > storedHighScore) {
+    if (score > getHighScore()) {
       animation.classList.add("visible");
-      localStorage.setItem("High score", score);
+      saveHighScore(score);
     }
     openModal();
   }, CONFIG.timing.gameOverDelay);
