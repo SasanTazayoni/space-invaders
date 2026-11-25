@@ -144,7 +144,6 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 - [Prettier](https://prettier.io/) used to format the code.
 - [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) used for performance review.
 - [Caniuse](https://caniuse.com/) used to check compatibility of code syntax with other browsers.
-- [PowerMapper](https://www.powermapper.com/) used to check compatibility of website with other browsers.
 - [ChatGPT](https://chatgpt.com/) used to verify code and for problem-solving.
 - [StackOverflow](https://stackoverflow.com/) used to problem solve and deal with queries.
 - [Epidemicsound](https://www.epidemicsound.com/) used to obtain sound effects for the application.
@@ -231,12 +230,6 @@ Lighthouse was a helpful tool for checking where where the web application was e
 ![Lighthouse test for the game](documentation/lighthouse.png) <br>
 
 This application has received outstanding scores in key performance metrics, with an impressive 99 in performance and a perfect 100 in accessibility and SEO according to Google Lighthouse testing. These exceptional ratings reflect its commitment to providing a fast and accessible user experience while excelling in search engine optimization. Additionally, the high score of 92 in best practices showcases its dedication to adhering to industry standards and guidelines, further cementing its position as a top-notch and user-friendly application.
-
-### PowerMapper Compatibility
-
-![Compatibility of various browsers for Space invaders](documentation/powermapper.png) <br>
-
-As the results show, the application is highly compatible across all browsers.
 
 ### Bugs
 
