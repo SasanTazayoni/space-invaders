@@ -4,9 +4,9 @@ const CONFIG = {
     height: 576,
   },
   controls: {
-    left:  ["KeyA", "ArrowLeft", "Numpad4"],
+    left: ["KeyA", "ArrowLeft", "Numpad4"],
     right: ["KeyD", "ArrowRight", "Numpad6"],
-    fire:  ["Space"],
+    fire: ["Space"],
   },
   player: {
     speed: 6,
@@ -16,28 +16,28 @@ const CONFIG = {
     projectile: { width: 4, height: 16 },
   },
   invaderProjectiles: {
-    green:  { radius: 4, speed: 3   },
-    yellow: { width: 4, height: 20,  speed: 5  },
-    orange: { width: 6, height: 32,  speed: 7  },
-    red:    { width: 9, height: 180, speed: 10 },
+    green: { radius: 4, speed: 3 },
+    yellow: { width: 4, height: 20, speed: 5 },
+    orange: { width: 6, height: 32, speed: 7 },
+    red: { width: 9, height: 180, speed: 10 },
   },
   sounds: {
-    shipFire:       0.3,
-    smallLaser:     0.3,
-    mediumLaser:    0.2,
-    bigLaser:       0.2,
-    enormousLaser:  0.1,
+    shipFire: 0.3,
+    smallLaser: 0.3,
+    mediumLaser: 0.2,
+    bigLaser: 0.2,
+    enormousLaser: 0.1,
     alienDestroyed: 0.2,
-    shipDestroyed:  0.8,
+    shipDestroyed: 0.8,
   },
   grid: {
-    velocity:            1.8,
-    rows:                4,
-    minColumns:          5,
-    maxColumns:          7,
-    columnSpacing:       40,
-    rowSpacing:          30,
-    dropDistance:        30,
+    velocity: 1.8,
+    rows: 4,
+    minColumns: 5,
+    maxColumns: 7,
+    columnSpacing: 40,
+    rowSpacing: 30,
+    dropDistance: 30,
     minShootingInterval: 20,
     maxShootingInterval: 300,
   },
@@ -49,28 +49,28 @@ const CONFIG = {
     invaderType3: 400,
     invaderType4: 600,
     invaderType5: 1000,
-    waveClear:    10000,
+    waveClear: 10000,
   },
   scoreThresholds: [
-    100000, 200000, 300000, 400000, 500000,
-    600000, 700000, 800000, 900000, 1000000,
+    100000, 200000, 300000, 400000, 500000, 600000, 700000, 800000, 900000,
+    1000000,
   ],
   spawnRate: {
-    initial:          600,
+    initial: 600,
     decreasePerStage: 30,
   },
   particles: {
-    backgroundCount:     100,
-    backgroundSpeed:     0.3,
+    backgroundCount: 100,
+    backgroundSpeed: 0.3,
     backgroundMaxRadius: 2,
     backgroundMinOpacity: 0.5,
-    explosionCount:      15,
-    explosionMaxRadius:  8,
-    alienDeathCount:     15,
+    explosionCount: 15,
+    explosionMaxRadius: 8,
+    alienDeathCount: 15,
     alienDeathMaxRadius: 3,
   },
   timing: {
-    gameOverDelay:      1000,
+    gameOverDelay: 1000,
     stageClearDuration: 2000,
   },
 };
@@ -286,7 +286,10 @@ class GreenProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      playPooledSound("./assets/sounds/small-laser.mp3", CONFIG.sounds.smallLaser);
+      playPooledSound(
+        "./assets/sounds/small-laser.mp3",
+        CONFIG.sounds.smallLaser,
+      );
     }
   }
 }
@@ -313,7 +316,10 @@ class YellowProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      playPooledSound("./assets/sounds/medium-laser.mp3", CONFIG.sounds.mediumLaser);
+      playPooledSound(
+        "./assets/sounds/medium-laser.mp3",
+        CONFIG.sounds.mediumLaser,
+      );
     }
   }
 }
@@ -367,7 +373,10 @@ class RedProjectile extends Projectile {
 
   playSound() {
     if (this.soundEnabled) {
-      playPooledSound("./assets/sounds/enormous-laser.mp3", CONFIG.sounds.enormousLaser);
+      playPooledSound(
+        "./assets/sounds/enormous-laser.mp3",
+        CONFIG.sounds.enormousLaser,
+      );
     }
   }
 }
@@ -764,7 +773,8 @@ function animate() {
           game.over ||
           hitInvaders.has(invader) ||
           hitProjectiles.has(projectile)
-        ) return;
+        )
+          return;
 
         if (
           projectile.position.y - projectile.height / 2 <=
@@ -810,9 +820,7 @@ function animate() {
         const firstInvader = grid.invaders[0];
         const lastInvader = grid.invaders[grid.invaders.length - 1];
         grid.width =
-          lastInvader.position.x -
-          firstInvader.position.x +
-          lastInvader.width;
+          lastInvader.position.x - firstInvader.position.x + lastInvader.width;
         grid.position.x = firstInvader.position.x;
       }
 
@@ -864,7 +872,8 @@ function gameDifficultyIncrease(score) {
   for (let i = 0; i < CONFIG.scoreThresholds.length; i++) {
     if (score >= CONFIG.scoreThresholds[i] && !thresholdsTriggered[i]) {
       for (let j = 0; j < invaderFrequencies.length; j++) {
-        const newFrequency = (invaderFrequencies[j] -= CONFIG.frequencyDecreases[j]);
+        const newFrequency = (invaderFrequencies[j] -=
+          CONFIG.frequencyDecreases[j]);
         invaderFrequencies[j] = parseFloat(newFrequency.toFixed(3));
       }
       spawnRate -= CONFIG.spawnRate.decreasePerStage;
@@ -893,8 +902,7 @@ function destroyPlayer() {
   gameOverTimeout = setTimeout(() => {
     gameOverTimeout = null;
     game.active = false;
-    const storedHighScore =
-      parseInt(localStorage.getItem("High score")) || 0;
+    const storedHighScore = parseInt(localStorage.getItem("High score")) || 0;
     if (score > storedHighScore) {
       animation.classList.add("visible");
       localStorage.setItem("High score", score);
@@ -958,7 +966,10 @@ function firePlayerProjectile() {
 function startFiring() {
   if (projectileInterval !== null) return;
   firePlayerProjectile();
-  projectileInterval = setInterval(firePlayerProjectile, CONFIG.player.attackDelay);
+  projectileInterval = setInterval(
+    firePlayerProjectile,
+    CONFIG.player.attackDelay,
+  );
 }
 
 function stopFiring() {
