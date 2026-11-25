@@ -79,8 +79,12 @@
         </button>
       </div>
       <!-- Modal -->
-      <section class="instructions-modal" data-start-game-modal>
-        <h2>Instructions</h2>
+      <dialog
+        class="instructions-modal"
+        aria-labelledby="instructions-title"
+        data-start-game-modal
+      >
+        <h2 id="instructions-title" tabindex="-1" autofocus>Instructions</h2>
         <h3>Controls</h3>
         <p>The aim of the game is to destroy the alien invaders.</p>
         <p>
@@ -155,9 +159,7 @@
           knows, maybe someone will break that record!
         </p>
         <button class="button button--yellow" data-close-btn>Close</button>
-      </section>
-      <!-- Overlay -->
-      <div class="overlay" data-overlay></div>
+      </dialog>
     </main>
     <footer>
       <p>&copy; Space Invaders game 2023 created by Sasan Tazayoni</p>

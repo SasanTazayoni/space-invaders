@@ -23,6 +23,7 @@
   </head>
   <body>
     <main>
+      <h1 class="visually-hidden">Space Invaders</h1>
       <div id="canvas__container">
         <button
           class="sound-toggler active"
@@ -32,14 +33,23 @@
           <i class="fa-solid fa-volume-high" data-icon></i>
         </button>
         <p id="score"><span>Score:</span> <span data-score>0</span></p>
-        <canvas class="canvas" data-canvas></canvas>
+        <canvas
+          class="canvas"
+          role="img"
+          aria-label="Game area. Move with A and D or the arrow keys, and fire with Space."
+          data-canvas
+        ></canvas>
       </div>
       <!-- Stage clear modal -->
       <div class="stage-clear-modal" data-stage-clear-modal>
-        <h1 class="stage-clear-message" data-message>Stage cleared</h1>
+        <p class="stage-clear-message" role="status" data-message></p>
       </div>
       <!-- End game modal -->
-      <section class="end-game-modal" data-end-game-modal>
+      <dialog
+        class="end-game-modal"
+        aria-labelledby="game-over-title"
+        data-end-game-modal
+      >
         <div class="animated-text-container" data-animation>
           <span>N</span>
           <span>E</span>
@@ -54,7 +64,7 @@
           <span>R</span>
           <span>E</span>
         </div>
-        <h1>Game over</h1>
+        <h2 id="game-over-title" class="end-game-title">Game over</h2>
         <p data-end-score></p>
         <div class="btn-container">
           <button class="button button--yellow" data-play-btn>
@@ -64,9 +74,7 @@
             >Main menu</a
           >
         </div>
-      </section>
-      <!-- Overlay -->
-      <div class="overlay" data-overlay></div>
+      </dialog>
     </main>
     <footer>
       <p>&copy; Space Invaders game 2023 created by Sasan Tazayoni</p>

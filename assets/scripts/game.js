@@ -146,7 +146,6 @@ const endGameModal = document.querySelector("[data-end-game-modal]");
 const animation = document.querySelector("[data-animation]");
 const modalScore = document.querySelector("[data-end-score]");
 const playBtn = document.querySelector("[data-play-btn]");
-const overlay = document.querySelector("[data-overlay]");
 
 // Image preloading — every sprite is loaded once before the game starts, so
 // objects always have their image, size and position from the moment they exist
@@ -786,16 +785,25 @@ function destroyPlayer() {
 // Open/close modal
 
 function openModal() {
-  endGameModal.classList.add("open");
-  overlay.classList.add("open");
   modalScore.textContent = `Your score: ${score}`;
+  endGameModal.showModal();
 }
 
 function closeModal() {
-  endGameModal.classList.remove("open");
-  overlay.classList.remove("open");
+  endGameModal.close();
   modalScore.textContent = "";
 }
+
+// The player has to pick "Play again" or "Main menu", so Escape is blocked.
+// Some browsers force the dialog shut on a repeated Escape; if that happens
+// while the game is still over, open it again so the page isn't left frozen.
+endGameModal.addEventListener("cancel", (e) => {
+  e.preventDefault();
+});
+
+endGameModal.addEventListener("close", () => {
+  if (!game.active) endGameModal.showModal();
+});
 
 // Key controls
 
@@ -828,8 +836,13 @@ function stopFiring() {
 
 window.addEventListener("keydown", (e) => {
   const isFireKey = CONFIG.controls.fire.includes(e.code);
+  if (game.over) {
+    // stop Space scrolling the page during the explosion, but let it press
+    // the dialog's buttons once the game-over dialog is open
+    if (isFireKey && !endGameModal.open) e.preventDefault();
+    return;
+  }
   if (isFireKey) e.preventDefault();
-  if (game.over) return;
 
   heldKeys.add(e.code);
   if (isFireKey) startFiring();

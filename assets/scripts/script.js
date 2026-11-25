@@ -3,7 +3,6 @@ const currentHighScore = document.querySelector("[data-current-high-score]");
 const resetBtn = document.querySelector("[data-reset-button]");
 const instructionsBtn = document.querySelector("[data-instructions-button]");
 const startGameModal = document.querySelector("[data-start-game-modal]");
-const overlay = document.querySelector("[data-overlay]");
 const closeBtn = document.querySelector("[data-close-btn]");
 
 // High score text
@@ -43,20 +42,34 @@ resetBtn.addEventListener("click", () => {
 
 // Modal open and close
 
+// showModal() moves focus into the dialog, keeps Tab inside it, closes it on
+// Escape and returns focus to the Instructions button afterwards
+
 instructionsBtn.addEventListener("click", () => {
-  startGameModal.classList.add("open");
-  overlay.classList.add("open");
+  startGameModal.showModal();
 });
 
 closeBtn.addEventListener("click", () => {
-  startGameModal.classList.remove("open");
-  overlay.classList.remove("open");
+  startGameModal.close();
 });
 
-// Prevent scrolling with spacebar
+// clicks on the dimmed backdrop land on the dialog itself, outside its box
+startGameModal.addEventListener("click", (e) => {
+  if (e.target !== startGameModal) return;
+  const box = startGameModal.getBoundingClientRect();
+  const outside =
+    e.clientX < box.left ||
+    e.clientX > box.right ||
+    e.clientY < box.top ||
+    e.clientY > box.bottom;
+  if (outside) startGameModal.close();
+});
+
+// Prevent scrolling with spacebar — only when nothing is focused, so Space
+// still presses buttons for keyboard users
 
 document.addEventListener("keydown", (e) => {
-  if (e.key === " " || e.key === "Spacebar") {
+  if (e.code === "Space" && e.target === document.body) {
     e.preventDefault();
   }
 });
