@@ -246,6 +246,22 @@ This application has received outstanding scores in key performance metrics, wit
 - Aliens could pass through the ship and keep shooting from below the screen. The game now ends when an alien reaches the ship's row.
 - The menu and the game stopped working when the browser blocked site storage.
 
+## Running locally
+
+There's no build step and nothing to install: the game is plain HTML, CSS and JavaScript.
+
+1. Clone the repository: `git clone https://github.com/SasanTazayoni/space-invaders.git`
+2. Open `index.html` in a modern browser (Chrome, Edge, Firefox or Safari). Double-clicking the file works.
+
+The 'Exo 2' font loads from Google Fonts, so without an internet connection the text falls back to Arial. The sprites and sounds all come from the repository.
+
+To serve it over HTTP the way GitHub Pages does, use either of these:
+
+- **VSCode Live Server:** install the Live Server extension, open the project folder in VSCode, right-click `index.html` and choose "Open with Live Server". The game opens in your browser and reloads whenever you save a file.
+- **Python:** run `python -m http.server` from the project folder and visit `http://localhost:8000`.
+
+If you change the code, `npx prettier --write .` formats it with the project's Prettier settings.
+
 ## Deployment
 
 1. Log into [GitHub](https://github.com/).
