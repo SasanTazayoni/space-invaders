@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- style-src-attr 'unsafe-inline' is for the style="--i: n" letter delays -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self'; media-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'"
+    />
     <meta
       name="description"
       content="Experience a modern adaptation of the classic Space Invaders, featuring aliens with varying projectiles. Relive the nostalgia of the 1978 arcade hit while enjoying innovative gameplay. Test your skills with rapid thought-processing and quick reaction speeds in this retro-inspired gaming experience."
