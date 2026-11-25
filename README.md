@@ -225,7 +225,7 @@ A great way to test is to get users to try the application and give feedback. Ad
 
 ### Lighthouse testing
 
-Lighthouse was a helpful tool for checking where where the web application was experiencing the most issues.
+Lighthouse was a helpful tool for checking where the web application was experiencing the most issues.
 
 ![Lighthouse test for the game](documentation/lighthouse.png) <br>
 
