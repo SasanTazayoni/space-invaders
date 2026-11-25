@@ -118,23 +118,25 @@ The chosen color palette for the Space Invaders game collectively creates a visu
 
 ### Frameworks, libraries and programs used
 
-- [Font Awesome](https://fontawesome.com/) used for github icon and sound toggler.
+- [Octicons](https://github.com/primer/octicons) used for the GitHub icon (MIT licence). The sound toggle icons are inline SVGs drawn for this project.
 - [Coolors](https://coolors.co/) used to display colour palette used on the website.
 - [Google Fonts](https://fonts.google.com/) used to import 'Exo 2' font.
 - [Github](https://github.com/) used to host repository.
 - [Github pages](https://pages.github.com/) used to deploy the application.
 - [VSCode](https://code.visualstudio.com/) used to develop project.
+- [Gitpod](https://www.gitpod.io/) (now called Ona) used as a cloud development environment.
+- [Prettier](https://prettier.io/) used to format the code.
 - [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) used for performance review.
 - [Caniuse](https://caniuse.com/) used to check compatibility of code syntax with other browsers.
 - [PowerMapper](https://www.powermapper.com/) used to check compatibility of website with other browsers.
-- [ChatGPT](https://chat.openai.com/) used to verify code and for problem-solving.
+- [ChatGPT](https://chatgpt.com/) used to verify code and for problem-solving.
 - [StackOverflow](https://stackoverflow.com/) used to problem solve and deal with queries.
 - [Epidemicsound](https://www.epidemicsound.com/) used to obtain sound effects for the application.
 - [Favicon.io](https://favicon.io/) used to generate favicon.
 - [Unsplash](https://unsplash.com/) used to obtain background picture for the main menu.
 - [Hiclipart.com](https://www.hiclipart.com/) used to obtain sprite for player spaceship.
 - [Opensea.io](https://opensea.io/) used to obtain alien sprites.
-- [Paint 3D](https://apps.microsoft.com/store/detail/paint-3d/9NBLGGH5FV99) used to establish a blank background for all sprites.
+- Paint 3D (since discontinued by Microsoft) used to establish a blank background for all sprites.
 - [Youtube](https://www.youtube.com/watch?v=MCVU0w73uKI&t) used as a tutorial to understand concepts of collision and for the basis of building out this project.
 
 ## Testing
