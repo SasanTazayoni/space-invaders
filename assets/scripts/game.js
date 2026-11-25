@@ -73,6 +73,7 @@ const canvas = document.querySelector("[data-canvas]");
 const gameScore = document.querySelector("[data-score]");
 const context = canvas.getContext("2d");
 let projectileInterval = null;
+let gameOverTimeout = null;
 let firstProjectile = true;
 let frames = 0;
 let spawnRate = CONFIG.spawnRate.initial;
@@ -127,6 +128,8 @@ function clearCanvas() {
 }
 
 function resetGame() {
+  clearTimeout(gameOverTimeout);
+  gameOverTimeout = null;
   thresholdsTriggered = Array(CONFIG.scoreThresholds.length).fill(false);
 
   game.over = false;
@@ -706,24 +709,27 @@ function animate() {
   for (let index = invaderProjectiles.length - 1; index >= 0; index--) {
     const invaderProjectile = invaderProjectiles[index];
 
-    // projectile hits player
+    // projectile hits player — only the first hit counts; once the ship has
+    // exploded, later projectiles pass through while the explosion plays out
     if (
-      (invaderProjectile.position.y + invaderProjectile.radius >=
+      !game.over &&
+      ((invaderProjectile.position.y + invaderProjectile.radius >=
         player.position.y &&
         invaderProjectile.position.x + invaderProjectile.radius >=
           player.position.x &&
         invaderProjectile.position.x <= player.position.x + player.width) ||
-      (invaderProjectile.position.y + invaderProjectile.height >=
-        player.position.y &&
-        invaderProjectile.position.x + invaderProjectile.width >=
-          player.position.x &&
-        invaderProjectile.position.x <= player.position.x + player.width)
+        (invaderProjectile.position.y + invaderProjectile.height >=
+          player.position.y &&
+          invaderProjectile.position.x + invaderProjectile.width >=
+            player.position.x &&
+          invaderProjectile.position.x <= player.position.x + player.width))
     ) {
       invaderProjectiles.splice(index, 1);
       player.opacity = 0;
       game.over = true;
 
-      setTimeout(() => {
+      gameOverTimeout = setTimeout(() => {
+        gameOverTimeout = null;
         game.active = false;
         const storedHighScore =
           parseInt(localStorage.getItem("High score")) || 0;
@@ -800,7 +806,9 @@ function animate() {
       invader.update({ velocity: grid.velocity });
       // projectiles hit alien
       projectiles.forEach((projectile) => {
+        // no scoring after the ship is destroyed
         if (
+          game.over ||
           hitInvaders.has(invader) ||
           hitProjectiles.has(projectile)
         ) return;
