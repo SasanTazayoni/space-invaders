@@ -58,6 +58,7 @@ const CONFIG = {
     backgroundCount:     100,
     backgroundSpeed:     0.3,
     backgroundMaxRadius: 2,
+    backgroundMinOpacity: 0.5,
     explosionCount:      15,
     explosionMaxRadius:  8,
     alienDeathCount:     15,
@@ -149,21 +150,22 @@ function resetGame() {
   grids = [];
   invaderProjectiles = [];
 
+  const minOpacity = CONFIG.particles.backgroundMinOpacity;
   for (let i = 0; i < CONFIG.particles.backgroundCount; i++) {
-    particles.push(
-      new Particle({
-        position: {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-        },
-        velocity: {
-          x: 0,
-          y: CONFIG.particles.backgroundSpeed,
-        },
-        radius: Math.random() * CONFIG.particles.backgroundMaxRadius,
-        color: "white",
-      }),
-    );
+    const star = new Particle({
+      position: {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+      },
+      velocity: {
+        x: 0,
+        y: CONFIG.particles.backgroundSpeed,
+      },
+      radius: Math.random() * CONFIG.particles.backgroundMaxRadius,
+      color: "white",
+    });
+    star.opacity = minOpacity + Math.random() * (1 - minOpacity);
+    particles.push(star);
   }
 
   frames = 0;
