@@ -8,27 +8,84 @@ const CONFIG = {
     right: ["KeyD", "ArrowRight", "Numpad6"],
     fire: ["Space"],
   },
+  images: {
+    ship: "./assets/images/spaceship.png",
+    alien1: "./assets/images/alien1.png",
+    alien2: "./assets/images/alien2.png",
+    alien3: "./assets/images/alien3.png",
+    alien4: "./assets/images/alien4.png",
+    alien5: "./assets/images/alien5.png",
+  },
+  colors: {
+    background: "#14011f",
+    star: "white",
+    debris: "white",
+    explosion: "#feffe8",
+    loadError: "white",
+  },
   player: {
     speed: 6,
     scale: 0.4,
-    projectileSpeed: -10,
     attackDelay: 2000,
-    projectile: { width: 4, height: 16 },
   },
-  invaderProjectiles: {
-    green: { radius: 4, speed: 3 },
-    yellow: { width: 4, height: 20, speed: 5 },
-    orange: { width: 6, height: 32, speed: 7 },
-    red: { width: 9, height: 180, speed: 10 },
+  projectiles: {
+    player: {
+      shape: "rect",
+      width: 4,
+      height: 16,
+      speed: -10,
+      color: "white",
+      sound: "shipFire",
+    },
+    green: {
+      shape: "circle",
+      radius: 4,
+      speed: 3,
+      color: "lightgreen",
+      sound: "smallLaser",
+    },
+    yellow: {
+      shape: "rect",
+      width: 4,
+      height: 20,
+      speed: 5,
+      color: "yellow",
+      sound: "mediumLaser",
+    },
+    orange: {
+      shape: "rect",
+      width: 6,
+      height: 32,
+      speed: 7,
+      color: "orange",
+      sound: "bigLaser",
+    },
+    red: {
+      shape: "rect",
+      width: 9,
+      height: 180,
+      speed: 10,
+      color: "crimson",
+      sound: "enormousLaser",
+    },
   },
+  // Same order as invaderFrequencies: a roll below the nth threshold picks the
+  // nth type, and a roll above every threshold picks the last one.
+  invaders: [
+    { image: "alien1", projectile: "green", points: 200 },
+    { image: "alien2", projectile: "green", points: 200 },
+    { image: "alien3", projectile: "yellow", points: 400 },
+    { image: "alien4", projectile: "orange", points: 600 },
+    { image: "alien5", projectile: "red", points: 1000 },
+  ],
   sounds: {
-    shipFire: 0.3,
-    smallLaser: 0.3,
-    mediumLaser: 0.2,
-    bigLaser: 0.2,
-    enormousLaser: 0.1,
-    alienDestroyed: 0.2,
-    shipDestroyed: 0.8,
+    shipFire: { src: "./assets/sounds/ship-fire.mp3", volume: 0.3 },
+    smallLaser: { src: "./assets/sounds/small-laser.mp3", volume: 0.3 },
+    mediumLaser: { src: "./assets/sounds/medium-laser.mp3", volume: 0.2 },
+    bigLaser: { src: "./assets/sounds/big-laser.mp3", volume: 0.2 },
+    enormousLaser: { src: "./assets/sounds/enormous-laser.mp3", volume: 0.1 },
+    alienDestroyed: { src: "./assets/sounds/alien-destroyed.mp3", volume: 0.2 },
+    shipDestroyed: { src: "./assets/sounds/ship-destroyed.mp3", volume: 0.8 },
   },
   grid: {
     velocity: 1.8,
@@ -44,11 +101,6 @@ const CONFIG = {
   invaderFrequencies: [0.3, 0.55, 0.75, 0.9],
   frequencyDecreases: [0.03, 0.025, 0.02, 0.015],
   scoring: {
-    invaderType1: 200,
-    invaderType2: 200,
-    invaderType3: 400,
-    invaderType4: 600,
-    invaderType5: 1000,
     waveClear: 10000,
   },
   scoreThresholds: [
@@ -68,6 +120,8 @@ const CONFIG = {
     explosionMaxRadius: 8,
     alienDeathCount: 15,
     alienDeathMaxRadius: 3,
+    burstSpeed: 1,
+    fadeRate: 0.01,
   },
   timing: {
     gameOverDelay: 1000,
@@ -94,6 +148,43 @@ const modalScore = document.querySelector("[data-end-score]");
 const playBtn = document.querySelector("[data-play-btn]");
 const overlay = document.querySelector("[data-overlay]");
 
+// Image preloading — every sprite is loaded once before the game starts, so
+// objects always have their image, size and position from the moment they exist
+
+const images = {};
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    image.src = src;
+  });
+}
+
+function loadImages() {
+  return Promise.all(
+    Object.entries(CONFIG.images).map(([name, src]) =>
+      loadImage(src).then((image) => {
+        images[name] = image;
+      }),
+    ),
+  );
+}
+
+function showLoadError() {
+  context.fillStyle = CONFIG.colors.background;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = CONFIG.colors.loadError;
+  context.font = '20px "Exo 2", Arial, sans-serif';
+  context.textAlign = "center";
+  context.fillText(
+    "The game couldn't load. Please refresh the page.",
+    canvas.width / 2,
+    canvas.height / 2,
+  );
+}
+
 // Audio pool — reuses Audio objects instead of creating new ones per sound
 
 const audioPools = {};
@@ -114,6 +205,32 @@ function playPooledSound(src, volume) {
   }
   audio.volume = volume;
   audio.play().catch(() => {});
+}
+
+function playSound(name) {
+  if (!soundEnabled) return;
+  const { src, volume } = CONFIG.sounds[name];
+  playPooledSound(src, volume);
+}
+
+// Collision helpers
+
+function boxBounds({ position, width, height }) {
+  return {
+    left: position.x,
+    right: position.x + width,
+    top: position.y,
+    bottom: position.y + height,
+  };
+}
+
+function overlaps(a, b) {
+  return (
+    a.left <= b.right &&
+    a.right >= b.left &&
+    a.top <= b.bottom &&
+    a.bottom >= b.top
+  );
 }
 
 // Reset game
@@ -155,20 +272,21 @@ function resetGame() {
 
   const minOpacity = CONFIG.particles.backgroundMinOpacity;
   for (let i = 0; i < CONFIG.particles.backgroundCount; i++) {
-    const star = new Particle({
-      position: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      },
-      velocity: {
-        x: 0,
-        y: CONFIG.particles.backgroundSpeed,
-      },
-      radius: Math.random() * CONFIG.particles.backgroundMaxRadius,
-      color: "white",
-    });
-    star.opacity = minOpacity + Math.random() * (1 - minOpacity);
-    particles.push(star);
+    particles.push(
+      new Particle({
+        position: {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+        },
+        velocity: {
+          x: 0,
+          y: CONFIG.particles.backgroundSpeed,
+        },
+        radius: Math.random() * CONFIG.particles.backgroundMaxRadius,
+        color: CONFIG.colors.star,
+        opacity: minOpacity + Math.random() * (1 - minOpacity),
+      }),
+    );
   }
 
   frames = 0;
@@ -185,28 +303,22 @@ canvas.height = CONFIG.canvas.height;
 
 class Player {
   constructor() {
+    this.image = images.ship;
+    this.width = this.image.width * CONFIG.player.scale;
+    this.height = this.image.height * CONFIG.player.scale;
+    this.position = {
+      x: canvas.width / 2 - this.width / 2,
+      y: canvas.height - this.height,
+    };
     this.velocity = {
       x: 0,
       y: 0,
     };
-
     this.opacity = 1;
+  }
 
-    const image = new Image();
-    image.src = "./assets/images/spaceship.png";
-    image.onload = () => {
-      const scale = CONFIG.player.scale;
-      this.image = image;
-      this.width = image.width * scale;
-      this.height = image.height * scale;
-      this.position = {
-        x: canvas.width / 2 - this.width / 2,
-        y: canvas.height - this.height,
-      };
-    };
-    image.onerror = () => {
-      console.error("Failed to load player image:", image.src);
-    };
+  getBounds() {
+    return boxBounds(this);
   }
 
   draw() {
@@ -225,42 +337,61 @@ class Player {
   }
 
   update() {
-    if (this.image) {
-      this.draw();
-      this.position.x += this.velocity.x;
-    }
+    this.draw();
+    this.position.x += this.velocity.x;
   }
 }
 
-// Projectiles
+// Projectiles — position.x is the horizontal centre; position.y is the top
+// edge of a rectangle or the centre of a circle
 
 class Projectile {
-  constructor({ position, velocity, soundEnabled }) {
+  constructor({ kind, position }) {
+    this.spec = CONFIG.projectiles[kind];
     this.position = position;
-    this.velocity = velocity;
-    this.soundEnabled = soundEnabled;
-    this.height = CONFIG.player.projectile.height;
-    this.width = CONFIG.player.projectile.width;
-    this.playSound();
+    this.velocity = {
+      x: 0,
+      y: this.spec.speed,
+    };
+  }
+
+  getBounds() {
+    const { x, y } = this.position;
+    if (this.spec.shape === "circle") {
+      const { radius } = this.spec;
+      return {
+        left: x - radius,
+        right: x + radius,
+        top: y - radius,
+        bottom: y + radius,
+      };
+    }
+    const { width, height } = this.spec;
+    return {
+      left: x - width / 2,
+      right: x + width / 2,
+      top: y,
+      bottom: y + height,
+    };
   }
 
   draw() {
     context.beginPath();
-    context.rect(
-      this.position.x - this.width / 2,
-      this.position.y,
-      this.width,
-      this.height,
-    );
-    context.fillStyle = "white";
+    if (this.spec.shape === "circle") {
+      context.arc(
+        this.position.x,
+        this.position.y,
+        this.spec.radius,
+        0,
+        Math.PI * 2,
+      );
+    } else {
+      const { left, top } = this.getBounds();
+      context.rect(left, top, this.spec.width, this.spec.height);
+    }
+    context.fillStyle = this.spec.color;
     context.fill();
     context.closePath();
-  }
-
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound("./assets/sounds/ship-fire.mp3", CONFIG.sounds.shipFire);
-    }
   }
 
   update() {
@@ -270,129 +401,23 @@ class Projectile {
   }
 }
 
-class GreenProjectile extends Projectile {
-  constructor({ position, velocity, soundEnabled }) {
-    super({ position, velocity, soundEnabled });
-    this.radius = CONFIG.invaderProjectiles.green.radius;
-  }
+// Particles — background stars and explosion debris
 
-  draw() {
-    context.beginPath();
-    context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = "lightgreen";
-    context.fill();
-    context.closePath();
-  }
-
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound(
-        "./assets/sounds/small-laser.mp3",
-        CONFIG.sounds.smallLaser,
-      );
-    }
-  }
-}
-
-class YellowProjectile extends Projectile {
-  constructor({ position, velocity, soundEnabled }) {
-    super({ position, velocity, soundEnabled });
-    this.height = CONFIG.invaderProjectiles.yellow.height;
-    this.width = CONFIG.invaderProjectiles.yellow.width;
-  }
-
-  draw() {
-    context.beginPath();
-    context.rect(
-      this.position.x - this.width / 2,
-      this.position.y,
-      this.width,
-      this.height,
-    );
-    context.fillStyle = "yellow";
-    context.fill();
-    context.closePath();
-  }
-
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound(
-        "./assets/sounds/medium-laser.mp3",
-        CONFIG.sounds.mediumLaser,
-      );
-    }
-  }
-}
-
-class OrangeProjectile extends Projectile {
-  constructor({ position, velocity, soundEnabled }) {
-    super({ position, velocity, soundEnabled });
-    this.height = CONFIG.invaderProjectiles.orange.height;
-    this.width = CONFIG.invaderProjectiles.orange.width;
-  }
-
-  draw() {
-    context.beginPath();
-    context.rect(
-      this.position.x - this.width / 2,
-      this.position.y,
-      this.width,
-      this.height,
-    );
-    context.fillStyle = "orange";
-    context.fill();
-    context.closePath();
-  }
-
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound("./assets/sounds/big-laser.mp3", CONFIG.sounds.bigLaser);
-    }
-  }
-}
-
-class RedProjectile extends Projectile {
-  constructor({ position, velocity, soundEnabled }) {
-    super({ position, velocity, soundEnabled });
-    this.height = CONFIG.invaderProjectiles.red.height;
-    this.width = CONFIG.invaderProjectiles.red.width;
-  }
-
-  draw() {
-    context.beginPath();
-    context.rect(
-      this.position.x - this.width / 2,
-      this.position.y,
-      this.width,
-      this.height,
-    );
-    context.fillStyle = "crimson";
-    context.fill();
-    context.closePath();
-  }
-
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound(
-        "./assets/sounds/enormous-laser.mp3",
-        CONFIG.sounds.enormousLaser,
-      );
-    }
-  }
-}
-
-// Explosion animations
-
-class AnimatedParticle {
-  constructor({ position, velocity, radius, color, fades, soundEnabled }) {
+class Particle {
+  constructor({
+    position,
+    velocity,
+    radius,
+    color,
+    opacity = 1,
+    fades = false,
+  }) {
     this.position = position;
     this.velocity = velocity;
-    this.soundEnabled = soundEnabled;
     this.radius = radius;
     this.color = color;
-    this.opacity = 1;
+    this.opacity = opacity;
     this.fades = fades;
-    this.playSound();
   }
 
   draw() {
@@ -406,112 +431,52 @@ class AnimatedParticle {
     context.restore();
   }
 
-  playSound() {
-    if (this.soundEnabled) {
-      playPooledSound(this.getSoundFilePath(), this.getSoundVolume());
-    }
-  }
-
   update() {
     this.draw();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.fades) this.opacity -= 0.01;
+    if (this.fades) this.opacity -= CONFIG.particles.fadeRate;
   }
 }
 
-class Particle extends AnimatedParticle {
-  constructor({ position, velocity, radius, color, fades, soundEnabled }) {
-    super({
-      position,
-      velocity,
-      radius,
-      color,
-      fades,
-      soundEnabled,
-    });
-  }
-
-  getSoundFilePath() {
-    return "./assets/sounds/alien-destroyed.mp3";
-  }
-
-  getSoundVolume() {
-    return CONFIG.sounds.alienDestroyed;
-  }
-}
-
-class Explosion extends AnimatedParticle {
-  constructor({ position, velocity, radius, color, fades, soundEnabled }) {
-    super({
-      position,
-      velocity,
-      radius,
-      color,
-      fades,
-      soundEnabled,
-    });
-  }
-
-  getSoundFilePath() {
-    return "./assets/sounds/ship-destroyed.mp3";
-  }
-
-  getSoundVolume() {
-    return CONFIG.sounds.shipDestroyed;
+function spawnBurst({ x, y, count, maxRadius, color }) {
+  const spread = () => (Math.random() - 0.5) * 2 * CONFIG.particles.burstSpeed;
+  for (let i = 0; i < count; i++) {
+    particles.push(
+      new Particle({
+        position: { x, y },
+        velocity: { x: spread(), y: spread() },
+        radius: Math.random() * maxRadius,
+        color,
+        fades: true,
+      }),
+    );
   }
 }
 
 // Alien generator
 
+function pickInvaderType() {
+  const roll = Math.random();
+  const index = invaderFrequencies.findIndex((threshold) => roll < threshold);
+  return CONFIG.invaders[index === -1 ? CONFIG.invaders.length - 1 : index];
+}
+
 class Invader {
-  constructor({ position }) {
-    this.velocity = {
-      x: 0,
-      y: 0,
+  constructor({ position, type }) {
+    this.type = type;
+    this.image = images[type.image];
+    this.width = this.image.width;
+    this.height = this.image.height;
+    this.position = {
+      x: position.x,
+      y: position.y,
     };
+  }
 
-    const alienImages = [
-      ["./assets/images/alien1.png", "invaderType1"],
-      ["./assets/images/alien2.png", "invaderType2"],
-      ["./assets/images/alien3.png", "invaderType3"],
-      ["./assets/images/alien4.png", "invaderType4"],
-      ["./assets/images/alien5.png", "invaderType5"],
-    ];
-
-    const image = new Image();
-    const randomValue = Math.random();
-    if (randomValue < invaderFrequencies[0]) {
-      image.src = alienImages[0][0];
-      this.type = alienImages[0][1];
-    } else if (randomValue < invaderFrequencies[1]) {
-      image.src = alienImages[1][0];
-      this.type = alienImages[1][1];
-    } else if (randomValue < invaderFrequencies[2]) {
-      image.src = alienImages[2][0];
-      this.type = alienImages[2][1];
-    } else if (randomValue < invaderFrequencies[3]) {
-      image.src = alienImages[3][0];
-      this.type = alienImages[3][1];
-    } else {
-      image.src = alienImages[4][0];
-      this.type = alienImages[4][1];
-    }
-
-    image.onload = () => {
-      const scale = 1;
-      this.image = image;
-      this.width = image.width * scale;
-      this.height = image.height * scale;
-      this.position = {
-        x: position.x,
-        y: position.y,
-      };
-    };
-    image.onerror = () => {
-      console.error("Failed to load invader image:", image.src);
-    };
+  getBounds() {
+    return boxBounds(this);
   }
 
   draw() {
@@ -525,71 +490,19 @@ class Invader {
   }
 
   update({ velocity }) {
-    if (this.image) {
-      this.draw();
-      this.position.x += velocity.x;
-      this.position.y += velocity.y;
-    }
+    this.draw();
+    this.position.x += velocity.x;
+    this.position.y += velocity.y;
   }
 
-  shoot(invaderProjectiles) {
-    if (this.type === "invaderType3") {
-      invaderProjectiles.push(
-        new YellowProjectile({
-          position: {
-            x: this.position?.x + this.width / 2,
-            y: this.position.y + this.height,
-          },
-          velocity: {
-            x: 0,
-            y: CONFIG.invaderProjectiles.yellow.speed,
-          },
-          soundEnabled,
-        }),
-      );
-    } else if (this.type === "invaderType4") {
-      invaderProjectiles.push(
-        new OrangeProjectile({
-          position: {
-            x: this.position?.x + this.width / 2,
-            y: this.position.y + this.height,
-          },
-          velocity: {
-            x: 0,
-            y: CONFIG.invaderProjectiles.orange.speed,
-          },
-          soundEnabled,
-        }),
-      );
-    } else if (this.type === "invaderType5") {
-      invaderProjectiles.push(
-        new RedProjectile({
-          position: {
-            x: this.position?.x + this.width / 2,
-            y: this.position.y + this.height,
-          },
-          velocity: {
-            x: 0,
-            y: CONFIG.invaderProjectiles.red.speed,
-          },
-          soundEnabled,
-        }),
-      );
-    } else {
-      invaderProjectiles.push(
-        new GreenProjectile({
-          position: {
-            x: this.position?.x + this.width / 2,
-            y: this.position.y + this.height,
-          },
-          velocity: {
-            x: 0,
-            y: CONFIG.invaderProjectiles.green.speed,
-          },
-          soundEnabled,
-        }),
-      );
-    }
+  shoot() {
+    return new Projectile({
+      kind: this.type.projectile,
+      position: {
+        x: this.position.x + this.width / 2,
+        y: this.position.y + this.height,
+      },
+    });
   }
 }
 
@@ -625,6 +538,7 @@ class Grid {
               x: x * CONFIG.grid.columnSpacing,
               y: y * CONFIG.grid.rowSpacing,
             },
+            type: pickInvaderType(),
           }),
         );
       }
@@ -670,7 +584,7 @@ let score = 0;
 function animate() {
   if (!game.active) return;
   requestAnimationFrame(animate);
-  context.fillStyle = "#14011f";
+  context.fillStyle = CONFIG.colors.background;
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   for (let i = particles.length - 1; i >= 0; i--) {
@@ -691,32 +605,17 @@ function animate() {
 
   for (let index = invaderProjectiles.length - 1; index >= 0; index--) {
     const invaderProjectile = invaderProjectiles[index];
+    const bounds = invaderProjectile.getBounds();
 
     // projectile hits player — only the first hit counts; once the ship has
     // exploded, later projectiles pass through while the explosion plays out
-    if (
-      !game.over &&
-      ((invaderProjectile.position.y + invaderProjectile.radius >=
-        player.position.y &&
-        invaderProjectile.position.x + invaderProjectile.radius >=
-          player.position.x &&
-        invaderProjectile.position.x <= player.position.x + player.width) ||
-        (invaderProjectile.position.y + invaderProjectile.height >=
-          player.position.y &&
-          invaderProjectile.position.x + invaderProjectile.width >=
-            player.position.x &&
-          invaderProjectile.position.x <= player.position.x + player.width))
-    ) {
+    if (!game.over && overlaps(bounds, player.getBounds())) {
       invaderProjectiles.splice(index, 1);
       destroyPlayer();
       continue;
     }
 
-    if (
-      invaderProjectile.position.y + invaderProjectile.radius >=
-        canvas.height ||
-      invaderProjectile.position.y + invaderProjectile.height >= canvas.height
-    ) {
+    if (bounds.top >= canvas.height) {
       invaderProjectiles.splice(index, 1);
     } else {
       invaderProjectile.update();
@@ -725,7 +624,7 @@ function animate() {
 
   for (let index = projectiles.length - 1; index >= 0; index--) {
     const projectile = projectiles[index];
-    if (projectile.position.y + projectile.height <= 0) {
+    if (projectile.getBounds().bottom <= 0) {
       projectiles.splice(index, 1);
     } else {
       projectile.update();
@@ -745,9 +644,11 @@ function animate() {
     // Check if the current frame matches the random interval
     if (frames % randomShootingInterval === 0 && grid.invaders.length > 0) {
       // Select random invaders to shoot
-      grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
-        invaderProjectiles,
-      );
+      const shooter =
+        grid.invaders[Math.floor(Math.random() * grid.invaders.length)];
+      const projectile = shooter.shoot();
+      invaderProjectiles.push(projectile);
+      playSound(projectile.spec.sound);
     }
 
     const hitInvaders = new Set();
@@ -755,14 +656,10 @@ function animate() {
 
     grid.invaders.forEach((invader) => {
       invader.update({ velocity: grid.velocity });
+      const invaderBounds = invader.getBounds();
 
       // an alien reaching the ship's row is an invasion — game over
-      if (
-        !game.over &&
-        invader.position &&
-        player.position &&
-        invader.position.y + invader.height >= player.position.y
-      ) {
+      if (!game.over && invaderBounds.bottom >= player.position.y) {
         destroyPlayer();
       }
 
@@ -776,38 +673,21 @@ function animate() {
         )
           return;
 
-        if (
-          projectile.position.y - projectile.height / 2 <=
-            invader.position?.y + invader.height &&
-          projectile.position.y + projectile.height / 2 >= invader.position.y &&
-          projectile.position.x + projectile.width / 2 >= invader.position.x &&
-          projectile.position.x - projectile.width / 2 <=
-            invader.position.x + invader.width
-        ) {
+        if (overlaps(projectile.getBounds(), invaderBounds)) {
           hitInvaders.add(invader);
           hitProjectiles.add(projectile);
 
-          score += CONFIG.scoring[invader.type] ?? CONFIG.scoring.invaderType1;
+          score += invader.type.points;
           gameScore.innerHTML = score;
 
-          for (let i = 0; i < CONFIG.particles.alienDeathCount; i++) {
-            particles.push(
-              new Particle({
-                position: {
-                  x: invader.position.x + invader.width / 2,
-                  y: invader.position.y + invader.height / 2,
-                },
-                velocity: {
-                  x: (Math.random() - 0.5) * 2,
-                  y: (Math.random() - 0.5) * 2,
-                },
-                radius: Math.random() * CONFIG.particles.alienDeathMaxRadius,
-                color: "white",
-                fades: true,
-                soundEnabled: !soundEnabled ? false : i === 0,
-              }),
-            );
-          }
+          spawnBurst({
+            x: invader.position.x + invader.width / 2,
+            y: invader.position.y + invader.height / 2,
+            count: CONFIG.particles.alienDeathCount,
+            maxRadius: CONFIG.particles.alienDeathMaxRadius,
+            color: CONFIG.colors.debris,
+          });
+          playSound("alienDestroyed");
         }
       });
     });
@@ -835,19 +715,17 @@ function animate() {
 
   grids = grids.filter((grid) => grid.invaders.length > 0);
 
-  if (player.position) {
-    if (isHeld("left")) {
-      player.velocity.x = -CONFIG.player.speed;
-    } else if (isHeld("right")) {
-      player.velocity.x = CONFIG.player.speed;
-    } else {
-      player.velocity.x = 0;
-    }
-    player.position.x = Math.min(
-      Math.max(player.position.x, 0),
-      canvas.width - player.width,
-    );
+  if (isHeld("left")) {
+    player.velocity.x = -CONFIG.player.speed;
+  } else if (isHeld("right")) {
+    player.velocity.x = CONFIG.player.speed;
+  } else {
+    player.velocity.x = 0;
   }
+  player.position.x = Math.min(
+    Math.max(player.position.x, 0),
+    canvas.width - player.width,
+  );
 
   // spawn aliens
   if (frames % randomInterval === 0) {
@@ -859,8 +737,15 @@ function animate() {
   frames++;
 }
 
-resetGame();
-animate();
+loadImages()
+  .then(() => {
+    resetGame();
+    animate();
+  })
+  .catch((error) => {
+    console.error(error);
+    showLoadError();
+  });
 
 function nextSpawnInterval() {
   return Math.floor(Math.random() * spawnRate + spawnRate);
@@ -910,24 +795,14 @@ function destroyPlayer() {
     openModal();
   }, CONFIG.timing.gameOverDelay);
 
-  for (let i = 0; i < CONFIG.particles.explosionCount; i++) {
-    particles.push(
-      new Explosion({
-        position: {
-          x: player.position.x + player.width / 2,
-          y: player.position.y + player.height / 2,
-        },
-        velocity: {
-          x: (Math.random() - 0.5) * 2,
-          y: (Math.random() - 0.5) * 2,
-        },
-        radius: Math.random() * CONFIG.particles.explosionMaxRadius,
-        color: "#feffe8",
-        fades: true,
-        soundEnabled: !soundEnabled ? false : i === 0,
-      }),
-    );
-  }
+  spawnBurst({
+    x: player.position.x + player.width / 2,
+    y: player.position.y + player.height / 2,
+    count: CONFIG.particles.explosionCount,
+    maxRadius: CONFIG.particles.explosionMaxRadius,
+    color: CONFIG.colors.explosion,
+  });
+  playSound("shipDestroyed");
 }
 
 // Open/close modal
@@ -947,20 +822,16 @@ function closeModal() {
 // Key controls
 
 function firePlayerProjectile() {
-  if (!player.position) return;
-  projectiles.push(
-    new Projectile({
-      position: {
-        x: player.position.x + player.width / 2,
-        y: player.position.y,
-      },
-      velocity: {
-        x: 0,
-        y: CONFIG.player.projectileSpeed,
-      },
-      soundEnabled,
-    }),
-  );
+  if (!player) return;
+  const projectile = new Projectile({
+    kind: "player",
+    position: {
+      x: player.position.x + player.width / 2,
+      y: player.position.y,
+    },
+  });
+  projectiles.push(projectile);
+  playSound(projectile.spec.sound);
 }
 
 function startFiring() {
