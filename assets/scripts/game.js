@@ -699,40 +699,7 @@ function animate() {
           invaderProjectile.position.x <= player.position.x + player.width))
     ) {
       invaderProjectiles.splice(index, 1);
-      player.opacity = 0;
-      game.over = true;
-      stopFiring();
-
-      gameOverTimeout = setTimeout(() => {
-        gameOverTimeout = null;
-        game.active = false;
-        const storedHighScore =
-          parseInt(localStorage.getItem("High score")) || 0;
-        if (score > storedHighScore) {
-          animation.classList.add("visible");
-          localStorage.setItem("High score", score);
-        }
-        openModal();
-      }, CONFIG.timing.gameOverDelay);
-
-      for (let i = 0; i < CONFIG.particles.explosionCount; i++) {
-        particles.push(
-          new Explosion({
-            position: {
-              x: player.position.x + player.width / 2,
-              y: player.position.y + player.height / 2,
-            },
-            velocity: {
-              x: (Math.random() - 0.5) * 2,
-              y: (Math.random() - 0.5) * 2,
-            },
-            radius: Math.random() * CONFIG.particles.explosionMaxRadius,
-            color: "#feffe8",
-            fades: true,
-            soundEnabled: !soundEnabled ? false : i === 0,
-          }),
-        );
-      }
+      destroyPlayer();
       continue;
     }
 
@@ -779,6 +746,17 @@ function animate() {
 
     grid.invaders.forEach((invader) => {
       invader.update({ velocity: grid.velocity });
+
+      // an alien reaching the ship's row is an invasion — game over
+      if (
+        !game.over &&
+        invader.position &&
+        player.position &&
+        invader.position.y + invader.height >= player.position.y
+      ) {
+        destroyPlayer();
+      }
+
       // projectiles hit alien
       projectiles.forEach((projectile) => {
         // no scoring after the ship is destroyed
@@ -847,6 +825,8 @@ function animate() {
     }
   });
 
+  grids = grids.filter((grid) => grid.invaders.length > 0);
+
   if (player.position) {
     if (isHeld("left")) {
       player.velocity.x = -CONFIG.player.speed;
@@ -900,6 +880,45 @@ function gameDifficultyIncrease(score) {
         stageClearMessage.textContent = "";
       }, CONFIG.timing.stageClearDuration);
     }
+  }
+}
+
+// Game over
+
+function destroyPlayer() {
+  player.opacity = 0;
+  game.over = true;
+  stopFiring();
+
+  gameOverTimeout = setTimeout(() => {
+    gameOverTimeout = null;
+    game.active = false;
+    const storedHighScore =
+      parseInt(localStorage.getItem("High score")) || 0;
+    if (score > storedHighScore) {
+      animation.classList.add("visible");
+      localStorage.setItem("High score", score);
+    }
+    openModal();
+  }, CONFIG.timing.gameOverDelay);
+
+  for (let i = 0; i < CONFIG.particles.explosionCount; i++) {
+    particles.push(
+      new Explosion({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y + player.height / 2,
+        },
+        velocity: {
+          x: (Math.random() - 0.5) * 2,
+          y: (Math.random() - 0.5) * 2,
+        },
+        radius: Math.random() * CONFIG.particles.explosionMaxRadius,
+        color: "#feffe8",
+        fades: true,
+        soundEnabled: !soundEnabled ? false : i === 0,
+      }),
+    );
   }
 }
 
