@@ -3,6 +3,11 @@ const CONFIG = {
     width: 1024,
     height: 576,
   },
+  controls: {
+    left:  ["KeyA", "ArrowLeft", "Numpad4"],
+    right: ["KeyD", "ArrowRight", "Numpad6"],
+    fire:  ["Space"],
+  },
   player: {
     speed: 6,
     scale: 0.4,
@@ -76,7 +81,6 @@ const context = canvas.getContext("2d");
 let projectileInterval = null;
 let gameOverTimeout = null;
 let stageClearTimeout = null;
-let firstProjectile = true;
 let frames = 0;
 let spawnRate = CONFIG.spawnRate.initial;
 let randomInterval = nextSpawnInterval();
@@ -132,8 +136,7 @@ function resetGame() {
   stageClearTimeout = null;
   stageClearModal.classList.remove("open");
   stageClearMessage.textContent = "";
-  clearInterval(projectileInterval);
-  projectileInterval = null;
+  stopFiring();
   thresholdsTriggered = Array(CONFIG.scoreThresholds.length).fill(false);
 
   game.over = false;
@@ -640,23 +643,11 @@ let grids = [];
 let invaderProjectiles = [];
 let particles = [];
 
-const keys = {
-  a: {
-    pressed: false,
-  },
-  ArrowLeft: {
-    pressed: false,
-  },
-  d: {
-    pressed: false,
-  },
-  ArrowRight: {
-    pressed: false,
-  },
-  space: {
-    pressed: false,
-  },
-};
+const heldKeys = new Set();
+
+function isHeld(action) {
+  return CONFIG.controls[action].some((code) => heldKeys.has(code));
+}
 
 let game = {
   over: false,
@@ -710,6 +701,7 @@ function animate() {
       invaderProjectiles.splice(index, 1);
       player.opacity = 0;
       game.over = true;
+      stopFiring();
 
       gameOverTimeout = setTimeout(() => {
         gameOverTimeout = null;
@@ -855,18 +847,18 @@ function animate() {
     }
   });
 
-  if (
-    (keys.a.pressed || keys.ArrowLeft.pressed) &&
-    player.position?.x - player.width / 2 >= 0
-  ) {
-    player.velocity.x = -CONFIG.player.speed;
-  } else if (
-    (keys.d.pressed || keys.ArrowRight.pressed) &&
-    player.position.x + 1.5 * player.width <= canvas.width
-  ) {
-    player.velocity.x = CONFIG.player.speed;
-  } else {
-    player.velocity.x = 0;
+  if (player.position) {
+    if (isHeld("left")) {
+      player.velocity.x = -CONFIG.player.speed;
+    } else if (isHeld("right")) {
+      player.velocity.x = CONFIG.player.speed;
+    } else {
+      player.velocity.x = 0;
+    }
+    player.position.x = Math.min(
+      Math.max(player.position.x, 0),
+      canvas.width - player.width,
+    );
   }
 
   // spawn aliens
@@ -927,87 +919,49 @@ function closeModal() {
 
 // Key controls
 
+function firePlayerProjectile() {
+  if (!player.position) return;
+  projectiles.push(
+    new Projectile({
+      position: {
+        x: player.position.x + player.width / 2,
+        y: player.position.y,
+      },
+      velocity: {
+        x: 0,
+        y: CONFIG.player.projectileSpeed,
+      },
+      soundEnabled,
+    }),
+  );
+}
+
+function startFiring() {
+  if (projectileInterval !== null) return;
+  firePlayerProjectile();
+  projectileInterval = setInterval(firePlayerProjectile, CONFIG.player.attackDelay);
+}
+
+function stopFiring() {
+  clearInterval(projectileInterval);
+  projectileInterval = null;
+}
+
 window.addEventListener("keydown", (e) => {
-  if (game.over) {
-    if (e.key === " ") {
-      e.preventDefault();
-    }
-    return;
-  }
+  const isFireKey = CONFIG.controls.fire.includes(e.code);
+  if (isFireKey) e.preventDefault();
+  if (game.over) return;
 
-  switch (e.key) {
-    case "a":
-      keys.a.pressed = true;
-      break;
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = true;
-      break;
-    case "d":
-      keys.d.pressed = true;
-      break;
-    case "ArrowRight":
-      keys.ArrowRight.pressed = true;
-      break;
-    case " ":
-      e.preventDefault();
-      if (projectileInterval === null) {
-        projectiles.push(
-          new Projectile({
-            position: {
-              x: player.position.x + player.width / 2,
-              y: player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: CONFIG.player.projectileSpeed,
-            },
-            soundEnabled,
-          }),
-        );
-
-        firstProjectile = false;
-
-        projectileInterval = setInterval(
-          () => {
-            projectiles.push(
-              new Projectile({
-                position: {
-                  x: player.position.x + player.width / 2,
-                  y: player.position.y,
-                },
-                velocity: {
-                  x: 0,
-                  y: attackSpeed,
-                },
-                soundEnabled,
-              }),
-            );
-          },
-          firstProjectile ? 0 : CONFIG.player.attackDelay,
-        );
-      }
-      break;
-  }
+  heldKeys.add(e.code);
+  if (isFireKey) startFiring();
 });
 
 window.addEventListener("keyup", (e) => {
-  switch (e.key) {
-    case "a":
-      keys.a.pressed = false;
-      break;
-    case "ArrowLeft":
-      keys.ArrowLeft.pressed = false;
-      break;
-    case "d":
-      keys.d.pressed = false;
-      break;
-    case "ArrowRight":
-      keys.ArrowRight.pressed = false;
-      break;
-    case " ":
-      clearInterval(projectileInterval);
-      projectileInterval = null;
-      firstProjectile = true;
-      break;
-  }
+  heldKeys.delete(e.code);
+  if (CONFIG.controls.fire.includes(e.code)) stopFiring();
+});
+
+window.addEventListener("blur", () => {
+  heldKeys.clear();
+  stopFiring();
 });
